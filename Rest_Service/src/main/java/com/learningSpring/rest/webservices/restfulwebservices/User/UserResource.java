@@ -27,11 +27,8 @@ public class UserResource {
 
     @GetMapping("/users/{id}")
     public EntityModel<person> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-        person person = service.findUser(id).orElse(null);
+        person person = service.findUser(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
 
-        if (person == null) {
-            throw new UserNotFoundException("id =" + id);
-        }
         EntityModel<person> model = EntityModel.of(person);
         WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
