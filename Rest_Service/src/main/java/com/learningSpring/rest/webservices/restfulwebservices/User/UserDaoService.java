@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserDaoService {
@@ -20,13 +21,9 @@ public class UserDaoService {
         PEOPLE.add(person);
         return person;
     }
-    public person findUser(int id) {
-        for(person person : PEOPLE) {
-            if(person.getId() == id) {
-                return person;
-            }
-        }
-        return null;
+    public Optional<person> findUser(int id) {
+        return PEOPLE.stream().filter(person -> person.getId() == id).findFirst();
+
     }
 
     public person deleteById(int id) {

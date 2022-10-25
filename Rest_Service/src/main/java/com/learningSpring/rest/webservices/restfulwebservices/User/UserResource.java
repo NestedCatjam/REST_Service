@@ -27,7 +27,7 @@ public class UserResource {
 
     @GetMapping("/users/{id}")
     public EntityModel<person> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-        person person = service.findUser(id);
+        person person = service.findUser(id).orElse(null);
 
         if (person == null) {
             throw new UserNotFoundException("id =" + id);
