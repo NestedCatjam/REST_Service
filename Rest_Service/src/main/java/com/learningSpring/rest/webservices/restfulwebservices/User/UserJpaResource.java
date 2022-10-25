@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.pawn;
+package com.learningSpring.rest.webservices.restfulwebservices.User;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -23,63 +23,63 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-public class PawnJPAResource {
+public class UserJpaResource {
     @Autowired
-    private PawnRepository pawnRepository;
+    private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
 
     @GetMapping("/jpa/users")
-    public List<Pawn> retrieveAllPawns() {
-        return pawnRepository.findAll();
+    public List<person> retrieveAllUsers() {
+        return userRepository.findAll();
     }
 
     @GetMapping("/jpa/users/{id}")
-    public EntityModel<Pawn> retrievePawn(@PathVariable int id) throws UserNotFoundException {
-        Optional<Pawn> pawn = pawnRepository.findById(id);
+    public EntityModel<person> retrieveUser(@PathVariable int id) throws UserNotFoundException {
+        Optional<person> user = userRepository.findById(id);
 
-        if (!pawn.isPresent()) {
+        if (!user.isPresent()) {
             throw new UserNotFoundException("id =" + id);
         }
-        EntityModel<Pawn> model = EntityModel.of(pawn.get());
-        WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllPawns());
+        EntityModel<person> model = EntityModel.of(user.get());
+        WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
         model.add(linkToUsers.withRel("all-users"));
         return model;
     }
 
     @DeleteMapping("/jpa/users/{id}")
-    public void deletePawn(@PathVariable int id) throws UserNotFoundException {
-        pawnRepository.deleteById(id);
+    public void deleteUser(@PathVariable int id) throws UserNotFoundException {
+        userRepository.deleteById(id);
     }
     @PostMapping("/jpa/users")
-    public ResponseEntity<Object> postPawn(@Valid @RequestBody Pawn pawn) {
-        Pawn savedPawn = pawnRepository.save(pawn);
+    public ResponseEntity<Object> postUser(@Valid @RequestBody person person) {
+        person savedPerson = userRepository.save(person);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPawn.getId())
+                .buildAndExpand(savedPerson.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/jpa/users/{id}/posts")
     public List<Post> retrieveAllPosts(@PathVariable int id) {
-        Optional<Pawn> optionalPawn = pawnRepository.findById(id);
-        if(optionalPawn.isEmpty()) {
+        Optional<person> optionalUser = userRepository.findById(id);
+        if(optionalUser.isEmpty()) {
             throw new UserNotFoundException("id=" + id);
         }
-        return optionalPawn.get().getPosts();
+        return optionalUser.get().getPosts();
     }
 
     @PostMapping("/jpa/users/{id}/posts")
     public ResponseEntity<Object> createPost(@PathVariable int id, @RequestBody Post post) {
-        Optional<Pawn> optionalPawn = pawnRepository.findById(id);
-        if (optionalPawn.isEmpty()) {
+        Optional<person> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()) {
             throw new UserNotFoundException("id=" + id);
         }
-        Pawn pawn = optionalPawn.get();
+        person person = optionalUser.get();
 
-        post.setPawn(pawn);
+        post.setUser(person);
 
         postRepository.save(post);
 

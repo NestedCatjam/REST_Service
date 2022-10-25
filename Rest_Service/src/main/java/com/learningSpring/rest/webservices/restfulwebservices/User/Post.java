@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.pawn;
+package com.learningSpring.rest.webservices.restfulwebservices.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,7 +12,7 @@ public class Post {
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private Pawn pawn;
+    private person person;
 
     @Override
     public String toString() {
@@ -30,8 +30,8 @@ public class Post {
         this.description = description;
     }
 
-    public void setPawn(Pawn pawn) {
-        this.pawn = pawn;
+    public void setUser(person person) {
+        this.person = person;
     }
 
     public Integer getId() {
@@ -42,7 +42,7 @@ public class Post {
         return description;
     }
 
-    public Pawn getPawn() {
-        return pawn;
+    public person getUser() {
+        return person;
     }
 }

@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.pawn;
+package com.learningSpring.rest.webservices.restfulwebservices.User;
 
 import com.learningSpring.rest.webservices.restfulwebservices.Exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +21,18 @@ public class UserResource {
     private UserDaoService service;
 
     @GetMapping("/users")
-    public List<Pawn> retrieveAllUsers() {
+    public List<person> retrieveAllUsers() {
         return service.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public EntityModel<Pawn> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-        Pawn pawn = service.findUser(id);
+    public EntityModel<person> retrieveUser(@PathVariable int id) throws UserNotFoundException {
+        person person = service.findUser(id);
 
-        if (pawn == null) {
+        if (person == null) {
             throw new UserNotFoundException("id =" + id);
         }
-        EntityModel<Pawn> model = EntityModel.of(pawn);
+        EntityModel<person> model = EntityModel.of(person);
         WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
         model.add(linkToUsers.withRel("all-users"));
@@ -41,17 +41,17 @@ public class UserResource {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) throws UserNotFoundException {
-        Pawn pawn = service.deleteById(id);
-        if (pawn == null) {
+        person person = service.deleteById(id);
+        if (person == null) {
             throw new UserNotFoundException("id =" + id);
         }
     }
     @PostMapping("/users")
-    public ResponseEntity<Object> postUser(@Valid @RequestBody Pawn pawn) {
-        Pawn savedPawn = service.save(pawn);
+    public ResponseEntity<Object> postUser(@Valid @RequestBody person person) {
+        person savedPerson = service.save(person);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPawn.getId())
+                .buildAndExpand(savedPerson.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

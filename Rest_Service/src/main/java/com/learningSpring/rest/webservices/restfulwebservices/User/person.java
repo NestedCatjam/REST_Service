@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.pawn;
+package com.learningSpring.rest.webservices.restfulwebservices.User;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Pawn {
+public class person {
     @Id
     @GeneratedValue
     private Integer id;
@@ -19,7 +19,7 @@ public class Pawn {
     @Past
     private Date birthDate;
 
-    @OneToMany(mappedBy = "pawn")
+    @OneToMany(mappedBy = "person")
     private List<Post> posts;
 
     public List<Post> getPosts() {
@@ -30,13 +30,13 @@ public class Pawn {
         this.posts = posts;
     }
 
-    public Pawn(int id, String name, Date birthDate) {
+    public person(int id, String name, Date birthDate) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
     }
 
-    public Pawn() {
+    public person() {
 
     }
 
