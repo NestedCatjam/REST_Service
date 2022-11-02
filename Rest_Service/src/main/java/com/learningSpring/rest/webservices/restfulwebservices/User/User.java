@@ -33,6 +33,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "User")
+    @ToString.Exclude
     private List<Post> posts;
     public User(int id, String name, String email) {
         this.id = id;

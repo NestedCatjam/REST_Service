@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Table(name ="posts")
 @ToString
 public class Post {
     @Id
