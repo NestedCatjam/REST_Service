@@ -1,6 +1,8 @@
-package com.learningSpring.rest.webservices.restfulwebservices.User;
+package com.learningSpring.rest.webservices.restfulwebservices.Controllers;
 
 import com.learningSpring.rest.webservices.restfulwebservices.Exceptions.UserNotFoundException;
+import com.learningSpring.rest.webservices.restfulwebservices.User.User;
+import com.learningSpring.rest.webservices.restfulwebservices.User.UserDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -16,7 +18,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-public class UserResource {
+public class UserController {
     @Autowired
     private UserDaoService service;
 
