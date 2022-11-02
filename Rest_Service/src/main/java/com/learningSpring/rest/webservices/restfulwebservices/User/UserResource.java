@@ -21,18 +21,18 @@ public class UserResource {
     private UserDaoService service;
 
     @GetMapping("/users")
-    public List<person> retrieveAllUsers() {
+    public List<User> retrieveAllUsers() {
         return service.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public EntityModel<person> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-        person person = service.findUser(id);
+    public EntityModel<User> retrieveUser(@PathVariable int id) throws UserNotFoundException {
+        User User = service.findUser(id);
 
-        if (person == null) {
+        if (User == null) {
             throw new UserNotFoundException("id =" + id);
         }
-        EntityModel<person> model = EntityModel.of(person);
+        EntityModel<User> model = EntityModel.of(User);
         WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
         model.add(linkToUsers.withRel("all-users"));
@@ -41,17 +41,17 @@ public class UserResource {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) throws UserNotFoundException {
-        person person = service.deleteById(id);
-        if (person == null) {
+        User User = service.deleteById(id);
+        if (User == null) {
             throw new UserNotFoundException("id =" + id);
         }
     }
     @PostMapping("/users")
-    public ResponseEntity<Object> postUser(@Valid @RequestBody person person) {
-        person savedPerson = service.save(person);
+    public ResponseEntity<Object> postUser(@Valid @RequestBody User User) {
+        User savedUser = service.save(User);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPerson.getId())
+                .buildAndExpand(savedUser.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

@@ -1,48 +1,34 @@
 package com.learningSpring.rest.webservices.restfulwebservices.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 
+import javax.management.ConstructorParameters;
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class Post {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "postno")
     private Integer id;
-    private String description;
+    @Column(name = "content")
+    private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    private person person;
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-    public void setId(Integer id) {
+    @ToString.Exclude
+    private User User;
+    public Post(User user, int id) {
+        this.User = user;
         this.id = id;
     }
+    public Post() {
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setUser(person person) {
-        this.person = person;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public person getUser() {
-        return person;
     }
 }

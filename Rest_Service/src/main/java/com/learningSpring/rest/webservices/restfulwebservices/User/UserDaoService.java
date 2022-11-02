@@ -7,35 +7,35 @@ import java.util.List;
 
 @Component
 public class UserDaoService {
-    private static final List<person> PEOPLE = new ArrayList<>();
+    private static final List<User> PEOPLE = new ArrayList<>();
 
-    private static int usersCount = 3;
-    public List<person> findAll() {
+    private static int usersCount;
+    public List<User> findAll() {
         return PEOPLE;
     }
-    public person save(person person) {
-        if (person.getId() == 0) {
-            person.setId(usersCount++);
+    public User save(User User) {
+        if (User.getId() == 0) {
+            User.setId(usersCount++);
         }
-        PEOPLE.add(person);
-        return person;
+        PEOPLE.add(User);
+        return User;
     }
-    public person findUser(int id) {
-        for(person person : PEOPLE) {
-            if(person.getId() == id) {
-                return person;
+    public User findUser(int id) {
+        for(User User : PEOPLE) {
+            if(User.getId() == id) {
+                return User;
             }
         }
         return null;
     }
 
-    public person deleteById(int id) {
-        Iterator<person> iterator = PEOPLE.iterator();
+    public User deleteById(int id) {
+        Iterator<User> iterator = PEOPLE.iterator();
         while(iterator.hasNext()) {
-            person person = iterator.next();
-            if(person.getId() == id) {
+            User User = iterator.next();
+            if(User.getId() == id) {
                 iterator.remove();
-                return person;
+                return User;
             }
         }
         return null;
