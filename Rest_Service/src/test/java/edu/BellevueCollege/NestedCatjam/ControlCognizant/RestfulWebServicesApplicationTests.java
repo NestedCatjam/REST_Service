@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

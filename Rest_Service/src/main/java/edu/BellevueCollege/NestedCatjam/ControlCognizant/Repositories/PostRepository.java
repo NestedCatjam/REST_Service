@@ -1,6 +1,6 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Repositories;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories;
 
-import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

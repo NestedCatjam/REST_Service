@@ -1,8 +1,8 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Controllers;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
-import com.learningSpring.rest.webservices.restfulwebservices.Exceptions.UserNotFoundException;
-import com.learningSpring.rest.webservices.restfulwebservices.Entities.User;
-import com.learningSpring.rest.webservices.restfulwebservices.Utils.UserDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils.UserDaoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;

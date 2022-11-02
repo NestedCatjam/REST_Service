@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Exceptions;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
