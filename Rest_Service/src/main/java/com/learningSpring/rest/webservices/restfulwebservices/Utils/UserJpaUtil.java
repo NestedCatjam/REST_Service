@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.User;
+package com.learningSpring.rest.webservices.restfulwebservices.Utils;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -9,7 +9,11 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
+import com.learningSpring.rest.webservices.restfulwebservices.Entities.User;
 import com.learningSpring.rest.webservices.restfulwebservices.Exceptions.UserNotFoundException;
+import com.learningSpring.rest.webservices.restfulwebservices.Repositories.PostRepository;
+import com.learningSpring.rest.webservices.restfulwebservices.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -23,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-public class UserJpaResource {
+public class UserJpaUtil {
     @Autowired
     private UserRepository userRepository;
     @Autowired

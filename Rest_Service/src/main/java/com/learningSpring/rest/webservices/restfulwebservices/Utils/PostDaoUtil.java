@@ -1,5 +1,6 @@
-package com.learningSpring.rest.webservices.restfulwebservices.User;
+package com.learningSpring.rest.webservices.restfulwebservices.Utils;
 
+import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class PostDaoService {
+public class PostDaoUtil {
     private static final List<Post> POSTS = new ArrayList<>();
     private static int postsCount;
     public List<Post> findAll() {

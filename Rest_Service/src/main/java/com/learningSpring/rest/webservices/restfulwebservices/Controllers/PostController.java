@@ -1,10 +1,10 @@
 package com.learningSpring.rest.webservices.restfulwebservices.Controllers;
 
 import com.learningSpring.rest.webservices.restfulwebservices.Exceptions.UserNotFoundException;
-import com.learningSpring.rest.webservices.restfulwebservices.User.Post;
-import com.learningSpring.rest.webservices.restfulwebservices.User.PostDaoService;
-import com.learningSpring.rest.webservices.restfulwebservices.User.User;
-import com.learningSpring.rest.webservices.restfulwebservices.User.UserDaoService;
+import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
+import com.learningSpring.rest.webservices.restfulwebservices.Utils.PostDaoUtil;
+import com.learningSpring.rest.webservices.restfulwebservices.Entities.User;
+import com.learningSpring.rest.webservices.restfulwebservices.Utils.UserDaoUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,10 +15,10 @@ import java.util.List;
 
 @RestController
 public class PostController {
-    private PostDaoService postDaoService;
-    private UserDaoService userDaoService;
+    private PostDaoUtil postDaoService;
+    private UserDaoUtil userDaoService;
 
-    public PostController(PostDaoService postDaoService) {
+    public PostController(PostDaoUtil postDaoService) {
         this.postDaoService = postDaoService;
     }
 

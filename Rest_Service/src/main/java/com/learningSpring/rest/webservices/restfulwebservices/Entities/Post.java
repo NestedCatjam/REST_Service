@@ -1,12 +1,10 @@
-package com.learningSpring.rest.webservices.restfulwebservices.User;
+package com.learningSpring.rest.webservices.restfulwebservices.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Cascade;
 
-import javax.management.ConstructorParameters;
 import javax.persistence.*;
 
 @Entity
@@ -24,7 +22,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
-    private User User;
+    private com.learningSpring.rest.webservices.restfulwebservices.Entities.User User;
     public Post(User user, int id) {
         this.User = user;
         this.id = id;

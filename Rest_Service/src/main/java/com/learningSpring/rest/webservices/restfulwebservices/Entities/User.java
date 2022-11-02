@@ -1,17 +1,13 @@
-package com.learningSpring.rest.webservices.restfulwebservices.User;
+package com.learningSpring.rest.webservices.restfulwebservices.Entities;
 
-import jdk.jfr.DataAmount;
-import lombok.Data;
+import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.cglib.core.GeneratorStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.List;
 
 @Entity
