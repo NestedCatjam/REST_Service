@@ -1,17 +1,14 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Entities;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name ="posts")
-@ToString
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -22,7 +19,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
-    private com.learningSpring.rest.webservices.restfulwebservices.Entities.User User;
+    private edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User User;
     public Post(User user, int id) {
         this.User = user;
         this.id = id;

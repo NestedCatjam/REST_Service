@@ -1,8 +1,6 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Entities;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
-import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -11,10 +9,8 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "users")
-@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

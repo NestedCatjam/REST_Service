@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Utils;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -9,11 +9,11 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.learningSpring.rest.webservices.restfulwebservices.Entities.Post;
-import com.learningSpring.rest.webservices.restfulwebservices.Entities.User;
-import com.learningSpring.rest.webservices.restfulwebservices.Exceptions.UserNotFoundException;
-import com.learningSpring.rest.webservices.restfulwebservices.Repositories.PostRepository;
-import com.learningSpring.rest.webservices.restfulwebservices.Repositories.UserRepository;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.PostRepository;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;

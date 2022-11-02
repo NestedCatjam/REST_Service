@@ -1,5 +1,5 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Utils;
-import com.learningSpring.rest.webservices.restfulwebservices.Entities.User;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

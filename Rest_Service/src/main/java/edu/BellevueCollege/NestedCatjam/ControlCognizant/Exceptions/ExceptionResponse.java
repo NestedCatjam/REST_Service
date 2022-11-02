@@ -1,4 +1,4 @@
-package com.learningSpring.rest.webservices.restfulwebservices.Exceptions;
+package edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions;
 
 import java.util.Date;
 
