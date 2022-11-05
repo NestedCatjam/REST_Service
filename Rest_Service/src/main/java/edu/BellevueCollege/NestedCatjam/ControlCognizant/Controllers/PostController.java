@@ -24,18 +24,13 @@ public class PostController {
 
     @GetMapping("/users/{id}/posts")
     public List<Post> retrieveAllPosts(@PathVariable int id) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
+
         return user.getPosts();
     }
     @PostMapping("/users/{id}/posts")
     public ResponseEntity<Object> createPost(@PathVariable int id, @RequestBody Post post) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
         Post savedPost = postDaoService.save(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -45,10 +40,8 @@ public class PostController {
     }
     @PutMapping("/users/{id}/posts")
     public ResponseEntity<Object> updatePost(@PathVariable int id, @RequestBody Post post) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
+
         Post savedPost = postDaoService.save(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -58,10 +51,7 @@ public class PostController {
     }
     @DeleteMapping("/users/{id}/posts")
     public void deletePost(@PathVariable int id) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
         postDaoService.deleteById(id);
     }
 }

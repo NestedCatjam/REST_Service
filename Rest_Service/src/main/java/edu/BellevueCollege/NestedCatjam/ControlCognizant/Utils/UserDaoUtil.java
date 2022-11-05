@@ -1,16 +1,18 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ControlCognizantEntity;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserDaoUtil {
     private static final List<User> PEOPLE = new ArrayList<>();
 
-    private static int usersCount;
+    private static long usersCount;
     public List<User> findAll() {
         return PEOPLE;
     }
@@ -21,24 +23,11 @@ public class UserDaoUtil {
         PEOPLE.add(User);
         return User;
     }
-    public User findUser(int id) {
-        for(User User : PEOPLE) {
-            if(User.getId() == id) {
-                return User;
-            }
-        }
-        return null;
+    public Optional<User> findUser(long id) {
+        return ControlCognizantEntity.findEntity(id, PEOPLE);
     }
 
-    public User deleteById(int id) {
-        Iterator<User> iterator = PEOPLE.iterator();
-        while(iterator.hasNext()) {
-            User User = iterator.next();
-            if(User.getId() == id) {
-                iterator.remove();
-                return User;
-            }
-        }
-        return null;
+    public Optional<User> deleteById(int id) {
+        return ControlCognizantEntity.deleteEntityById(id, PEOPLE);
     }
 }

@@ -1,44 +1,35 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ControlCognizantEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 @Component
 public class ControlDaoUtil {
-    private static final List<Control> CONTROL_LIST = new ArrayList<>();
+    private static final List<Control> CONTROLS = new ArrayList<>();
     private static int controlCount;
     public List<Control> findAll() {
-        return CONTROL_LIST;
+        return CONTROLS;
     }
     public Control save(Control Control) {
         if (Control.getId() == 0) {
             Control.setId((long) controlCount++);
         }
-        CONTROL_LIST.add(Control);
+        CONTROLS.add(Control);
         return Control;
     }
-    public Control findControl(Long id) {
-        for(Control Control : CONTROL_LIST) {
-            if(Objects.equals(Control.getId(), id)) {
-                return Control;
-            }
-        }
-        return null;
+    public Optional<Control> findControl(long id) {
+        return ControlCognizantEntity.findEntity(id, CONTROLS);
     }
 
-    public Control deleteById(Long id) {
-        for(Control Control : CONTROL_LIST) {
-            if(Objects.equals(Control.getId(), id)) {
-                CONTROL_LIST.remove(Control);
-                return Control;
-            }
-        }
-        return null;
+    public Optional<Control> deleteById(long id) {
+        return ControlCognizantEntity.deleteEntityById(id, CONTROLS);
     }
 
 

@@ -29,11 +29,8 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public EntityModel<User> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-        User User = service.findUser(id);
+        var User = service.findUser(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
 
-        if (User == null) {
-            throw new UserNotFoundException("id =" + id);
-        }
         EntityModel<User> model = EntityModel.of(User);
         WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
@@ -43,10 +40,7 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id) throws UserNotFoundException {
-        User User = service.deleteById(id);
-        if (User == null) {
-            throw new UserNotFoundException("id =" + id);
-        }
+        User User = service.deleteById(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
     }
     @PostMapping("/users")
     public ResponseEntity<Object> postUser(@Valid @RequestBody User User) {

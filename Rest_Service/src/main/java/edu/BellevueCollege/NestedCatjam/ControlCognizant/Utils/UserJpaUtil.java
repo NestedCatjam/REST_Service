@@ -40,12 +40,9 @@ public class UserJpaUtil {
 
     @GetMapping("/jpa/users/{id}")
     public EntityModel<User> retrieveUser(@PathVariable int id) throws UserNotFoundException {
-        Optional<User> user = userRepository.findById(id);
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
 
-        if (!user.isPresent()) {
-            throw new UserNotFoundException("id =" + id);
-        }
-        EntityModel<User> model = EntityModel.of(user.get());
+        EntityModel<User> model = EntityModel.of(user);
         WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
         model.add(linkToUsers.withRel("all-users"));
@@ -68,22 +65,18 @@ public class UserJpaUtil {
 
     @GetMapping("/jpa/users/{id}/posts")
     public List<Post> retrieveAllPosts(@PathVariable int id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if(optionalUser.isEmpty()) {
-            throw new UserNotFoundException("id=" + id);
-        }
-        return optionalUser.get().getPosts();
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("id=" + id));
+
+        return user.getPosts();
     }
 
     @PostMapping("/jpa/users/{id}/posts")
     public ResponseEntity<Object> createPost(@PathVariable int id, @RequestBody Post post) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException("id=" + id);
-        }
-        User User = optionalUser.get();
+        var user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("id=" + id));
 
-        post.setUser(User);
+
+
+        post.setUser(user);
 
         postRepository.save(post);
 

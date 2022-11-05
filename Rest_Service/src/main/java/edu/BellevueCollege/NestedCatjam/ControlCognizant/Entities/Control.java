@@ -10,7 +10,7 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "control")
-public class Control {
+public class Control implements ControlCognizantEntity {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
