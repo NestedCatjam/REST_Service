@@ -16,7 +16,7 @@ public class User implements ControlCognizantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idno")
-    private Long id;
+    private UUID id;
     @Size(min = 2, message= "Name must be longer than 2 characters")
     @Column(name = "name")
     private String name;
@@ -28,7 +28,7 @@ public class User implements ControlCognizantEntity {
     @OneToMany(mappedBy = "User")
     @ToString.Exclude
     private List<Post> posts;
-    public User(long id, String name, String email) {
+    public User(UUID id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;

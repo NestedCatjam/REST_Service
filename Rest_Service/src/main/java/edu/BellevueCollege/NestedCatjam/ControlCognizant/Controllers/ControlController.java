@@ -6,6 +6,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils.ControlDaoUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class ControlController {
@@ -19,7 +20,7 @@ public class ControlController {
         return controlDaoUtil.findAll();
     }
     @GetMapping("/control/{id}")
-    public Control getControl(@PathVariable Long id) {
+    public Control getControl(@PathVariable UUID id) {
         return controlDaoUtil.findControl(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
     }
     @PutMapping("/control")
@@ -27,7 +28,7 @@ public class ControlController {
         return controlDaoUtil.save(control);
     }
     @DeleteMapping("/control/{id}")
-    public Control deleteControl(@PathVariable Long id) {
+    public Control deleteControl(@PathVariable UUID id) {
         return controlDaoUtil.deleteById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
     }
 }

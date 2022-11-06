@@ -4,10 +4,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ControlCogniza
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class PostDaoUtil {
@@ -17,17 +14,17 @@ public class PostDaoUtil {
         return POSTS;
     }
     public Post save(Post Post) {
-        if (Post.getId() == 0) {
-            Post.setId(postsCount++);
+        if (Post.getId() == null) {
+            Post.setId(UUID.randomUUID());
         }
         POSTS.add(Post);
         return Post;
     }
-    public Optional<Post> findPost(int id) {
+    public Optional<Post> findPost(UUID id) {
         return ControlCognizantEntity.findEntity(id, POSTS);
     }
 
-    public Optional<Post> deleteById(int id) {
+    public Optional<Post> deleteById(UUID id) {
         return ControlCognizantEntity.deleteEntityById(id, POSTS);
     }
 }

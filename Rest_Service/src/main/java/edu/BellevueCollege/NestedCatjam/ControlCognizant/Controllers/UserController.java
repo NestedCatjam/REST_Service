@@ -13,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public EntityModel<User> retrieveUser(@PathVariable int id) throws UserNotFoundException {
+    public EntityModel<User> retrieveUser(@PathVariable UUID id) throws UserNotFoundException {
         var User = service.findUser(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
 
         EntityModel<User> model = EntityModel.of(User);
@@ -39,7 +40,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable int id) throws UserNotFoundException {
+    public void deleteUser(@PathVariable UUID id) throws UserNotFoundException {
         User User = service.deleteById(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
     }
     @PostMapping("/users")

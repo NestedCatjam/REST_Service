@@ -4,10 +4,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ControlCognizantEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Component
@@ -18,17 +15,13 @@ public class ControlDaoUtil {
         return CONTROLS;
     }
     public Control save(Control Control) {
-        if (Control.getId() == 0) {
-            Control.setId((long) controlCount++);
-        }
-        CONTROLS.add(Control);
-        return Control;
+        return ControlCognizantEntity.save(Control, CONTROLS);
     }
-    public Optional<Control> findControl(long id) {
+    public Optional<Control> findControl(UUID id) {
         return ControlCognizantEntity.findEntity(id, CONTROLS);
     }
 
-    public Optional<Control> deleteById(long id) {
+    public Optional<Control> deleteById(UUID id) {
         return ControlCognizantEntity.deleteEntityById(id, CONTROLS);
     }
 

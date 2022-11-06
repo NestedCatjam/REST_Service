@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Control implements ControlCognizantEntity {
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
+    private UUID id;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "description", nullable = false)
@@ -28,7 +28,7 @@ public class Control implements ControlCognizantEntity {
     public Control() {
     }
 
-    public Control(Long id, String name, String description, String type, Control mapping) {
+    public Control(UUID id, String name, String description, String type, Control mapping) {
         this.id = id;
         this.name = name;
         this.description = description;
