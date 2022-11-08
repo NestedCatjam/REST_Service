@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class PostController {
@@ -23,19 +24,14 @@ public class PostController {
     }
 
     @GetMapping("/users/{id}/posts")
-    public List<Post> retrieveAllPosts(@PathVariable int id) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+    public List<Post> retrieveAllPosts(@PathVariable UUID id) {
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
+
         return user.getPosts();
     }
     @PostMapping("/users/{id}/posts")
-    public ResponseEntity<Object> createPost(@PathVariable int id, @RequestBody Post post) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+    public ResponseEntity<Object> createPost(@PathVariable UUID id, @RequestBody Post post) {
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
         Post savedPost = postDaoService.save(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -44,11 +40,9 @@ public class PostController {
         return ResponseEntity.created(location).build();
     }
     @PutMapping("/users/{id}/posts")
-    public ResponseEntity<Object> updatePost(@PathVariable int id, @RequestBody Post post) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+    public ResponseEntity<Object> updatePost(@PathVariable UUID id, @RequestBody Post post) {
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
+
         Post savedPost = postDaoService.save(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -57,11 +51,8 @@ public class PostController {
         return ResponseEntity.created(location).build();
     }
     @DeleteMapping("/users/{id}/posts")
-    public void deletePost(@PathVariable int id) {
-        User user = userDaoService.findUser(id);
-        if(user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
+    public void deletePost(@PathVariable UUID id) {
+        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
         postDaoService.deleteById(id);
     }
 }
