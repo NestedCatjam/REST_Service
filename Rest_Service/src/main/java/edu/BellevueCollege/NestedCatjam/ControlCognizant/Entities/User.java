@@ -28,6 +28,8 @@ public class User implements ControlCognizantEntity {
     @OneToMany(mappedBy = "User")
     @ToString.Exclude
     private List<Post> posts;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
     public User(UUID id, String name, String email) {
         this.id = id;
         this.name = name;

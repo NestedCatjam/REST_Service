@@ -25,6 +25,9 @@ public class Control implements ControlCognizantEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private Control mapping;
 
+    @Enumerated(EnumType.STRING)
+    private SecurityComplianceFramework framework;
+
     public Control() {
     }
 

@@ -19,4 +19,7 @@ public class ComplianceEvidence implements ControlCognizantEntity {
     private Blob evidence;
     @ManyToMany
     private List<Control> controlsImplemented;
+
+    @ManyToOne
+    private User contributor;
 }
