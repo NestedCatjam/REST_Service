@@ -16,8 +16,8 @@ public class ControlDaoUtil {
         return CONTROL_LIST;
     }
     public Control save(Control Control) {
-        if (Control.getId() == 0) {
-            Control.setId((long) controlCount++);
+        if (Control.getId().equals(0) 0) {
+            Control.setId(controlCount++);
         }
         CONTROL_LIST.add(Control);
         return Control;

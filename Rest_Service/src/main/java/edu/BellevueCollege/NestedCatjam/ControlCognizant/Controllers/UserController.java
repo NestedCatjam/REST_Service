@@ -1,5 +1,6 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils.UserDaoUtil;
@@ -39,6 +40,19 @@ public class UserController {
 
         model.add(linkToUsers.withRel("all-users"));
         return model;
+    }
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody User User, @PathVariable int id) {
+        User user = service.findUser(id);
+        if(user == null) {
+            throw new UserNotFoundException("id-" + id);
+        }
+        User savedUser = service.save(User);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedUser.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping("/users/{id}")
