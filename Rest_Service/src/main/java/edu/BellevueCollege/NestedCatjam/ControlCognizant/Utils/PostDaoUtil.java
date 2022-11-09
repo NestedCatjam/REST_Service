@@ -1,44 +1,30 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils;
 
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ControlCognizantEntity;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class PostDaoUtil {
     private static final List<Post> POSTS = new ArrayList<>();
-    private static int postsCount;
+    private static long postsCount;
     public List<Post> findAll() {
         return POSTS;
     }
     public Post save(Post Post) {
-        if (Post.getId() == 0) {
-            Post.setId(postsCount++);
+        if (Post.getId() == null) {
+            Post.setId(UUID.randomUUID());
         }
         POSTS.add(Post);
         return Post;
     }
-    public Post findPost(int id) {
-        for(Post Post : POSTS) {
-            if(Post.getId() == id) {
-                return Post;
-            }
-        }
-        return null;
+    public Optional<Post> findPost(UUID id) {
+        return ControlCognizantEntity.findEntity(id, POSTS);
     }
 
-    public Post deleteById(int id) {
-        Iterator<Post> iterator = POSTS.iterator();
-        while(iterator.hasNext()) {
-            Post Post = iterator.next();
-            if(Post.getId() == id) {
-                iterator.remove();
-                return Post;
-            }
-        }
-        return null;
+    public Optional<Post> deleteById(UUID id) {
+        return ControlCognizantEntity.deleteEntityById(id, POSTS);
     }
 }

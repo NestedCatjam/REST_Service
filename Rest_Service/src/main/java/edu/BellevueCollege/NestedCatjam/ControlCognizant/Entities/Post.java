@@ -5,22 +5,23 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Data
 @Table(name ="posts")
-public class Post {
+public class Post implements ControlCognizantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "postno")
-    private Integer id;
+    private UUID id;
     @Column(name = "content")
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
     private edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User User;
-    public Post(User user, int id) {
+    public Post(User user, UUID id) {
         this.User = user;
         this.id = id;
     }
