@@ -10,13 +10,14 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "compliance_evidence")
-public class ComplianceEvidence implements ControlCognizantEntity {
+public class ComplianceEvidence{
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id_no", nullable = false)
     private UUID id;
 
     @Lob
     private Blob evidence;
+
     @ManyToMany
     private List<Control> controlsImplemented;
 }

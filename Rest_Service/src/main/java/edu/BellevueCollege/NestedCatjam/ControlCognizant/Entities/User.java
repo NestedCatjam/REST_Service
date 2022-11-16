@@ -11,29 +11,22 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "users")
-public class User implements ControlCognizantEntity {
+@Table(name = "Users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idno")
-    private UUID id;
+    @Column(name = "id_no")
+    private Long id;
+
     @Size(min = 2, message= "Name must be longer than 2 characters")
-    @Column(name = "name")
+    @Column(name = "user_name")
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "user_email")
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<Post> posts;
-    public User(UUID id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-    }
-    public User() {
-
-    }
  }

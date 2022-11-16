@@ -2,9 +2,9 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils.PostDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.PostDaoUtil;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Utils.UserDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.UserDaoUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,35 +24,34 @@ public class PostController {
     }
 
     @GetMapping("/users/{id}/posts")
-    public List<Post> retrieveAllPosts(@PathVariable UUID id) {
+    public List<Post> retrieveAllPosts(@PathVariable Long id) {
         User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
 
         return user.getPosts();
     }
-    @PostMapping("/users/{id}/posts")
-    public ResponseEntity<Object> createPost(@PathVariable UUID id, @RequestBody Post post) {
-        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
-        Post savedPost = postDaoService.save(post);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedPost.getId())
-                .toUri();
-        return ResponseEntity.created(location).build();
-    }
-    @PutMapping("/users/{id}/posts")
-    public ResponseEntity<Object> updatePost(@PathVariable UUID id, @RequestBody Post post) {
+    @GetMapping("/users/{id}/posts/{post_id}")
+    public Post retrievePost(@PathVariable Long id, @PathVariable int post_id) {
         User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
 
-        Post savedPost = postDaoService.save(post);
+        return user.getPosts().stream().filter(post -> post.getId() == post_id).findFirst().orElseThrow(() -> new UserNotFoundException("id-" + id));
+    }
+    @PostMapping("/users/{id}/posts")
+    public ResponseEntity<Object> createPost(@RequestBody Post post) {
+        postDaoService.save(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(savedPost.getId())
+                .buildAndExpand(post.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
-    @DeleteMapping("/users/{id}/posts")
-    public void deletePost(@PathVariable UUID id) {
+    @PutMapping("/users/{id}/posts/{post_id}")
+    public void updatePost(@PathVariable Long id, @RequestBody Post post) {
+        postDaoService.updateByID(id, post);
+
+    }
+    @DeleteMapping("/users/{id}/posts/{post_id}")
+    public void deletePost(@PathVariable Long id, @PathVariable int post_id) {
         User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
-        postDaoService.deleteById(id);
+        postDaoService.deleteById(post_id);
     }
 }

@@ -10,29 +10,23 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "control")
-public class Control implements ControlCognizantEntity {
+public class Control{
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "control_id", nullable = false)
     private UUID id;
-    @Column(name = "name", nullable = false)
+
+    @Column(name = "Control_Name", nullable = false)
     private String name;
-    @Column(name = "description", nullable = false)
+
+    @Column(name = "control_description", nullable = false)
     private String description;
-    @Column(name = "type", nullable = false)
+
+    @Column(name = "control_type", nullable = false)
     private String type;
-    @Column(name = "subtype", nullable = false)
+
+    @Column(name = "control_subtype", nullable = false)
     private String subtype;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Control mapping;
-
-    public Control() {
-    }
-
-    public Control(UUID id, String name, String description, String type, Control mapping) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.mapping = mapping;
-    }
 }
