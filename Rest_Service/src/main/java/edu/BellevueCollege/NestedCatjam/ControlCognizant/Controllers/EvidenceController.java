@@ -23,15 +23,15 @@ public class EvidenceController {
         return evidenceDaoUtil.findEvidence(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
     }
     @PostMapping("/evidence")
-    public ComplianceEvidence createEvidence(ComplianceEvidence evidence) {
-        return evidenceDaoUtil.save(evidence);
+    public void createEvidence(ComplianceEvidence evidence) {
+        evidenceDaoUtil.save(evidence);
     }
     @PutMapping("/evidence/{id}")
     public void updateEvidence(@PathVariable UUID id, @RequestBody ComplianceEvidence evidence) {
-        evidenceDaoUtil.updateById(evidence, id);
+        evidenceDaoUtil.updateById(evidence);
     }
     @DeleteMapping("/evidence/{id}")
-    public ComplianceEvidence deleteEvidence(@PathVariable UUID id) {
-        return evidenceDaoUtil.deleteById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
+    public void deleteEvidence(@PathVariable UUID id) {
+        evidenceDaoUtil.deleteById(id);
     }
 }

@@ -30,16 +30,16 @@ public class ControlDaoUtil {
         return Optional.empty();
     }
 
-    public Optional<Control> deleteById(UUID id) {
+    public void deleteById(UUID id) {
         Iterator<Control> iterator = CONTROLS.iterator();
         while (iterator.hasNext()) {
             Control control = iterator.next();
             if (control.getId().equals(id)) {
                 iterator.remove();
-                return Optional.of(control);
+                break;
             }
         }
-        return Optional.empty();
+        controlCount--;
     }
 
     public void updateById(UUID id, Control control) {

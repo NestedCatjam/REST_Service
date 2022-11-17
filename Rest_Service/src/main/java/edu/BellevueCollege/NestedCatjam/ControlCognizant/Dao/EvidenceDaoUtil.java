@@ -22,6 +22,7 @@ public class EvidenceDaoUtil {
             evidence.setId(UUID.randomUUID());
         }
         EVIDENCE.add(evidence);
+        evidenceCount++;
         return evidence;
     }
 
@@ -43,15 +44,16 @@ public class EvidenceDaoUtil {
                 return Optional.of(evidence);
             }
         }
+        evidenceCount--;
         return Optional.empty();
     }
 
-    public void updateById(ComplianceEvidence evidence, UUID id) {
+    public void updateById(ComplianceEvidence evidence) {
         if (evidence.getId() == null) {
             throw new EvidenceNotFoundException("Evidence ID is null");
         }
         for (ComplianceEvidence evidence1 : EVIDENCE) {
-            if (evidence1.getId().equals(id)) {
+            if (evidence1.getId().equals(evidence.getId())) {
                 evidence1.setEvidence(evidence.getEvidence());
                 evidence1.setControlsImplemented(evidence.getControlsImplemented());
             }
