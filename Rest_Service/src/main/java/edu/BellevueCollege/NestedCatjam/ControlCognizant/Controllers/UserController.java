@@ -30,11 +30,11 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Long id) throws UserNotFoundException {
-        User User = service.deleteById(id).orElseThrow(() -> new UserNotFoundException("id =" + id));
+        service.deleteById(id);
     }
     @PostMapping("/users")
     public void postUser(@Valid @RequestBody User User) {
-        User savedUser = service.save(User);
+        service.save(User);
     }
     @PutMapping("/users/{id}")
     public void updateUser(@RequestBody User User) {
