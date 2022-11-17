@@ -20,4 +20,7 @@ public class ComplianceEvidence{
 
     @ManyToMany
     private List<Control> controlsImplemented;
+
+    @ManyToOne
+    private User complianceEvidence;
 }

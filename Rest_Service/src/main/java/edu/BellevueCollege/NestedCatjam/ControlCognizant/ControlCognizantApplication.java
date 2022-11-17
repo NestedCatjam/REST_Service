@@ -9,5 +9,4 @@ public class ControlCognizantApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ControlCognizantApplication.class, args);
 	}
-
 }

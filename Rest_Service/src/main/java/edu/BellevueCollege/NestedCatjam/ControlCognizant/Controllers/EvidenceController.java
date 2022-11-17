@@ -15,7 +15,7 @@ public class EvidenceController {
     EvidenceDaoUtil evidenceDaoUtil;
 
     @GetMapping("/evidence")
-    public List<ComplianceEvidence> getAllEvidence(@PathVariable UUID id) {
+    public List<ComplianceEvidence> getAllEvidence() {
         return evidenceDaoUtil.findAll();
     }
     @GetMapping("/evidence/{id}")
