@@ -12,14 +12,13 @@ public class PostDaoUtil {
     public List<Post> findAll() {
         return POSTS;
     }
-    public Post save(Post post) {
+    public void save(Post post) {
         Integer temp = post.getId();
         if (temp.equals(null)) {
             post.setId(postsCount + 1);
         }
         POSTS.add(post);
         postsCount++;
-        return post;
     }
 
     public void deleteById(int id) {
@@ -29,12 +28,13 @@ public class PostDaoUtil {
                 return;
             }
         }
+        postsCount--;
     }
-    public void updateByID(Long id, Post post) {
+    public void updateByID(Post post) {
         for (int i = 0; i < POSTS.size(); i++) {
-            if (POSTS.get(i).getId() == id) {
+            if (POSTS.get(i).getId() == post.getId()) {
                 POSTS.set(i, post);
-                return;
+                break;
             }
         }
     }

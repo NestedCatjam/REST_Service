@@ -46,12 +46,10 @@ public class PostController {
     }
     @PutMapping("/users/{id}/posts/{post_id}")
     public void updatePost(@PathVariable Long id, @RequestBody Post post) {
-        postDaoService.updateByID(id, post);
-
+        postDaoService.updateByID(post);
     }
     @DeleteMapping("/users/{id}/posts/{post_id}")
     public void deletePost(@PathVariable Long id, @PathVariable int post_id) {
-        User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
         postDaoService.deleteById(post_id);
     }
 }

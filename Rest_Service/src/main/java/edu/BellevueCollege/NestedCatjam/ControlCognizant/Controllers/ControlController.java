@@ -24,15 +24,15 @@ public class ControlController {
         return controlDaoUtil.findControl(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
     }
     @PostMapping("/control")
-    public Control createControl(Control control) {
-        return controlDaoUtil.save(control);
-        }
+    public void createControl(Control control) {
+         controlDaoUtil.save(control);
+    }
     @PutMapping("/control/{id}")
     public void updateControl(@PathVariable UUID id, Control control) {
         controlDaoUtil.updateById(id, control);
     }
     @DeleteMapping("/control/{id}")
-    public Control deleteControl(@PathVariable UUID id) {
-        return controlDaoUtil.deleteById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
+    public void deleteControl(@PathVariable UUID id) {
+        controlDaoUtil.deleteById(id);
     }
 }
