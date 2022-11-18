@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -23,12 +24,12 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public Optional<User> getUserById(@PathVariable Long id) {
+    public Optional<User> getUserById(@PathVariable UUID id) {
         return service.findUser(id);
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) throws UserNotFoundException {
+    public void deleteUser(@PathVariable UUID id) throws UserNotFoundException {
         service.deleteById(id);
     }
     @PostMapping("/users")
