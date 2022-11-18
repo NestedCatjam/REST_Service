@@ -7,17 +7,13 @@ import java.util.*;
 @Component
 public class UserDaoUtil {
     private static final List<User> PEOPLE = new ArrayList<>();
-
-    private static long usersCount;
     public List<User> findAll() {
         return PEOPLE;
     }
-    public void save(User User) {
-        if (User.getId() == null) {
-            User.setId(usersCount + 1);
-        }
-        PEOPLE.add(User);
-        usersCount++;
+    public void save(User user) {
+        user.setUuid(UUID.randomUUID());
+        user.setId((long) (PEOPLE.size() + 1));
+        PEOPLE.add(user);
     }
     public Optional<User> findUser(Long id) {
             for (User user : PEOPLE) {
@@ -28,8 +24,15 @@ public class UserDaoUtil {
             return Optional.empty();
         }
     public void deleteById(Long id) {
-            PEOPLE.removeIf(user -> user.getId().equals(id));
-            usersCount--;
+        // loop through people and delete a user by id, decrement every other users id
+        for (int i = 0; i < PEOPLE.size(); i++) {
+            if (PEOPLE.get(i).getId().equals(id)) {
+                PEOPLE.remove(i);
+                for (int j = i; j < PEOPLE.size(); j++) {
+                    PEOPLE.get(j).setId(PEOPLE.get(j).getId() - 1);
+                }
+            }
+        }
     }
 
     public void updateById(User user) {
@@ -37,7 +40,6 @@ public class UserDaoUtil {
             if (u.getId().equals(user.getId())) {
                 u.setName(user.getName());
                 u.setEmail(user.getEmail());
-                u.setId(user.getId());
                 u.setPosts(user.getPosts());
             }
         }
