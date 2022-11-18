@@ -24,13 +24,13 @@ public class PostController {
     }
 
     @GetMapping("/users/{id}/posts")
-    public List<Post> retrieveAllPosts(@PathVariable Long id) {
+    public List<Post> retrieveAllPosts(@PathVariable UUID id) {
         User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
 
         return user.getPosts();
     }
     @GetMapping("/users/{id}/posts/{post_id}")
-    public Post retrievePost(@PathVariable Long id, @PathVariable int post_id) {
+    public Post retrievePost(@PathVariable UUID id, @PathVariable int post_id) {
         User user = userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
 
         return user.getPosts().stream().filter(post -> post.getId() == post_id).findFirst().orElseThrow(() -> new UserNotFoundException("id-" + id));
@@ -45,11 +45,11 @@ public class PostController {
         return ResponseEntity.created(location).build();
     }
     @PutMapping("/users/{id}/posts/{post_id}")
-    public void updatePost(@PathVariable Long id, @RequestBody Post post) {
+    public void updatePost(@PathVariable UUID id, @RequestBody Post post) {
         postDaoService.updateByID(post);
     }
     @DeleteMapping("/users/{id}/posts/{post_id}")
-    public void deletePost(@PathVariable Long id, @PathVariable int post_id) {
+    public void deletePost(@PathVariable UUID id, @PathVariable int post_id) {
         postDaoService.deleteById(post_id);
     }
 }
