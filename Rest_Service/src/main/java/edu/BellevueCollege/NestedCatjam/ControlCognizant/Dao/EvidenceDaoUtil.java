@@ -1,7 +1,6 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ComplianceEvidence;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +9,6 @@ import java.util.*;
 @Component
 public class EvidenceDaoUtil {
     private static final List<ComplianceEvidence> EVIDENCE = new ArrayList<>();
-
-    private static long evidenceCount;
 
     public List<ComplianceEvidence> findAll() {
         return EVIDENCE;
@@ -22,7 +19,6 @@ public class EvidenceDaoUtil {
             evidence.setId(UUID.randomUUID());
         }
         EVIDENCE.add(evidence);
-        evidenceCount++;
         return evidence;
     }
 
@@ -44,7 +40,6 @@ public class EvidenceDaoUtil {
                 return Optional.of(evidence);
             }
         }
-        evidenceCount--;
         return Optional.empty();
     }
 

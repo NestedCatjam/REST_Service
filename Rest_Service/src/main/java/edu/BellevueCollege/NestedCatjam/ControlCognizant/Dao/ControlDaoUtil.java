@@ -9,17 +9,14 @@ import java.util.*;
 @Component
 public class ControlDaoUtil {
     private static final List<Control> CONTROLS = new ArrayList<>();
-    private static int controlCount;
     public List<Control> findAll() {
         return CONTROLS;
     }
-    public Control save(Control control) {
+    public void save(Control control) {
         if (control.getId() == null) {
             control.setId(UUID.randomUUID());
         }
         CONTROLS.add(control);
-        controlCount++;
-        return control;
     }
     public Optional<Control> findControl(UUID id) {
         for (Control control : CONTROLS) {
@@ -39,7 +36,6 @@ public class ControlDaoUtil {
                 break;
             }
         }
-        controlCount--;
     }
 
     public void updateById(UUID id, Control control) {
