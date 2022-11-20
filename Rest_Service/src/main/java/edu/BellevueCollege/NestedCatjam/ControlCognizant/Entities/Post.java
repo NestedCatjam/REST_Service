@@ -3,6 +3,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -17,6 +18,7 @@ public class Post {
     private Integer id;
 
     @Column(name = "Post_Content")
+    @Type(type = "text")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

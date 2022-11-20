@@ -55,11 +55,19 @@ public class PostController {
     }
     @PostMapping("/users/{id}/posts")
     public ResponseEntity<Object> createPost(@PathVariable UUID id, @RequestBody Post post) {
-        User user = userRepository.findById(id).get();
-        post.setUser(user);
-        postRepository.save(post);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
-        return ResponseEntity.created(location).build();
+        try {
+            for (User user : userRepository.findAll()) {
+                if (user.getId().equals(id)) {
+                    post.setUser(user);
+                    postRepository.save(post);
+                    URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
+                    return ResponseEntity.created(location).build();
+                }
+            } throw new UserNotFoundException("user with id " + id + " not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     @PutMapping("/users/{id}/posts/{post_id}")
     public void updatePost(@PathVariable UUID id, @RequestBody Post post) {
