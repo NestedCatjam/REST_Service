@@ -13,6 +13,9 @@ import java.util.UUID;
 @Data
 @Table(name = "compliance_evidence")
 public class ComplianceEvidence{
+    // constructor
+    public ComplianceEvidence() {
+    }
     @Id
     @GeneratedValue
     @Column(name = "id_no", nullable = false)
@@ -20,7 +23,7 @@ public class ComplianceEvidence{
     private UUID id;
 
     @Lob
-    private Blob evidence;
+    private byte[] evidence;
 
     @ManyToMany
     @JsonIgnore

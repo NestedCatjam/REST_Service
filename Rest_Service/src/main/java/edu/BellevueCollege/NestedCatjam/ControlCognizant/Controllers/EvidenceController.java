@@ -5,6 +5,12 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFo
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -22,15 +28,20 @@ public class EvidenceController {
         return null;
     }
     @PostMapping("/evidence")
-    public ComplianceEvidence createEvidence(ComplianceEvidence evidence) {
+    public ComplianceEvidence createEvidence(@RequestParam String id, @RequestBody String evidence) {
         try {
-            return evidenceRepository.save(evidence);
+            ComplianceEvidence newEvidence = new ComplianceEvidence();
+            newEvidence.setId(UUID.fromString(id));
+            // Write code to convert a file as a byte array somewhere around here to save to the db
+
+            return evidenceRepository.save(newEvidence);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
     @PutMapping("/evidence/{id}")
+    @Transactional
     public ComplianceEvidence updateEvidence(@RequestBody ComplianceEvidence evidence) {
         try {
             for (ComplianceEvidence evidenceFromDb : evidenceRepository.findAll()) {
@@ -44,6 +55,7 @@ public class EvidenceController {
         return null;
     }
     @DeleteMapping("/evidence/{id}")
+    @Transactional
     public void deleteEvidence(@PathVariable UUID id) {
         try {
             for (ComplianceEvidence evidenceFromDb : evidenceRepository.findAll()) {
@@ -54,5 +66,12 @@ public class EvidenceController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private byte[] convertToByteArray(File file) throws IOException {
+        FileInputStream fl = new FileInputStream(file);
+        byte[] arr = new byte[(int)file.length()];
+        fl.read(arr);
+        fl.close();
+        return arr;
     }
 }
