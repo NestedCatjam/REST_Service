@@ -3,6 +3,8 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.UserDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,26 +20,29 @@ public class UserController {
     @Autowired
     private UserDaoUtil service;
 
+    @Autowired
+    private UserRepository repository;
+
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
-        return service.findAll();
+        return repository.findAll();
     }
 
     @GetMapping("/users/{id}")
     public Optional<User> getUserById(@PathVariable UUID id) {
-        return service.findUser(id);
+        return repository.findById(id);
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable UUID id) throws UserNotFoundException {
-        service.deleteById(id);
+        repository.deleteById(id);
     }
     @PostMapping("/users")
     public void postUser(@Valid @RequestBody User User) {
-        service.save(User);
+        repository.save(User);
     }
     @PutMapping("/users/{id}")
     public void updateUser(@RequestBody User User) {
-        service.updateById(User);
+        repository.save(User);
     }
 }
