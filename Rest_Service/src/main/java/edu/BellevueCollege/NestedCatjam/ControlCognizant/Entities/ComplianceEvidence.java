@@ -1,7 +1,12 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
 import com.fasterxml.jackson.annotation.*;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.UserDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.sql.Blob;
@@ -28,5 +33,18 @@ public class ComplianceEvidence{
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("contributorId")
+
+    @Setter(AccessLevel.NONE)
     private User contributor;
+
+    @Autowired
+    @JsonIgnore
+    @Transient
+    private UserDaoUtil users;
+
+
+    @JsonProperty("contributorId")
+    public void setContributorById(UUID id) {
+        contributor = users.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id));
+    }
 }
