@@ -14,7 +14,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "postno")
-    private int id;
+    private Integer id;
 
     @Column(name = "Post_Content")
     private String content;

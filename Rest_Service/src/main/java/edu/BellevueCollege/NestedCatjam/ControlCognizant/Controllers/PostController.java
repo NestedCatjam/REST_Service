@@ -5,6 +5,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Post;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.PostDaoUtil;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.UserDaoUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RestController
 public class PostController {
     private PostDaoUtil postDaoService;
+    @Autowired
     private UserDaoUtil userDaoService;
 
     public PostController(PostDaoUtil postDaoService) {
@@ -36,8 +38,9 @@ public class PostController {
         return user.getPosts().stream().filter(post -> post.getId() == post_id).findFirst().orElseThrow(() -> new UserNotFoundException("id-" + id));
     }
     @PostMapping("/users/{id}/posts")
-    public ResponseEntity<Object> createPost(@RequestBody Post post) {
+    public ResponseEntity<Object> createPost(@PathVariable UUID id, @RequestBody Post post) {
         postDaoService.save(post);
+        userDaoService.findUser(id).orElseThrow(() -> new UserNotFoundException("id-" + id)).getPosts().add(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(post.getId())
