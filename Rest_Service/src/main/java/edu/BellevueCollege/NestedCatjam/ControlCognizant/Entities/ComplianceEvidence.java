@@ -1,5 +1,6 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Table(name = "compliance_evidence")
 public class ComplianceEvidence{
     @Id
+    @GeneratedValue
     @Column(name = "id_no", nullable = false)
     @Type(type = "uuid-char")
     private UUID id;
@@ -21,8 +23,10 @@ public class ComplianceEvidence{
     private Blob evidence;
 
     @ManyToMany
+    @JsonIgnore
     private List<Control> controlsImplemented;
 
     @ManyToOne
-    private User complianceEvidence;
+    @JsonIgnore
+    private User user;
 }

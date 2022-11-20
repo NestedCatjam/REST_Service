@@ -2,7 +2,6 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFoundException;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.ControlDaoUtil;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.ControlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ public class ControlController {
     @Autowired
     public ControlRepository controlRepository;
 
-    @GetMapping("/controls")
+    @GetMapping("/control")
     public List<Control> getAllControls() {
         return controlRepository.findAll();
     }
@@ -25,8 +24,12 @@ public class ControlController {
         return controlRepository.findById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
     }
     @PostMapping("/control")
-    public void createControl(Control control) {
-         controlRepository.save(control);
+    public void createControl(@RequestBody Control control) {
+        try {
+            controlRepository.save(control);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @PutMapping("/control/{id}")
     public void updateControl(@RequestBody Control control) {

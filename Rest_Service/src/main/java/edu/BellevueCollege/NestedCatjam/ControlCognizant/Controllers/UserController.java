@@ -22,29 +22,44 @@ public class UserController {
 
     @GetMapping("/users")
     public List<User> retrieveAllUsers() {
-        assert repository.findAll().size() > 0;
-        return repository.findAll();
+        try {
+            return repository.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @GetMapping("/users/{id}")
     public Optional<User> getUserById(@PathVariable UUID id) {
-        assert repository.findById(id).isPresent();
-        return repository.findById(id);
+        try {
+            return repository.findById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable UUID id) throws UserNotFoundException {
-        assert repository.findById(id).isPresent();
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @PostMapping("/users")
     public void postUser(@Valid @RequestBody User User) {
-        for (User user : repository.findAll()) {
-            if (user.getId().equals(User.getId())) {
-                throw new IllegalArgumentException("User with id " + User.getId() + " already exists.");
+        try {
+            for (User user : repository.findAll()) {
+                if (user.getId().equals(User.getId())) {
+                    throw new IllegalArgumentException("User with id " + User.getId() + " already exists.");
+                }
             }
+            repository.save(User);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
         }
-        repository.save(User);
     }
     @PutMapping("/users/{id}")
     public void updateUser(@RequestBody User User) {

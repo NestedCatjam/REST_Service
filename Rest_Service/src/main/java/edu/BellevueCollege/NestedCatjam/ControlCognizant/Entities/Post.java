@@ -20,6 +20,7 @@ public class Post {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // @JsonIgnore might cause an infinite loop if removed.  I'm not sure.
     @JsonIgnore
     @ToString.Exclude
     private User user;
