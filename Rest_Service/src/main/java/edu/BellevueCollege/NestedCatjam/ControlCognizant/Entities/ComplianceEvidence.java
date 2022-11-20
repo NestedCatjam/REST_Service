@@ -1,5 +1,6 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,6 +22,11 @@ public class ComplianceEvidence{
     @ManyToMany
     private List<Control> controlsImplemented;
 
-    @ManyToOne
-    private User complianceEvidence;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "contributor_id", nullable = false)
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("contributorId")
+    private User contributor;
 }
