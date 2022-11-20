@@ -3,6 +3,8 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.ControlDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.ControlRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,29 +12,37 @@ import java.util.UUID;
 
 @RestController
 public class ControlController {
-    public ControlDaoUtil controlDaoUtil;
+    @Autowired
+    public ControlRepository controlRepository;
 
-    public ControlController(ControlDaoUtil controlDaoUtil) {
-        this.controlDaoUtil = controlDaoUtil;
-    }
     @GetMapping("/controls")
     public List<Control> getAllControls() {
-        return controlDaoUtil.findAll();
+        return controlRepository.findAll();
     }
     @GetMapping("/control/{id}")
     public Control getControl(@PathVariable UUID id) {
-        return controlDaoUtil.findControl(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
+        assert controlRepository.findById(id).isPresent();
+        return controlRepository.findById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
     }
     @PostMapping("/control")
     public void createControl(Control control) {
-         controlDaoUtil.save(control);
+         controlRepository.save(control);
     }
     @PutMapping("/control/{id}")
-    public void updateControl(@PathVariable UUID id, Control control) {
-        controlDaoUtil.updateById(id, control);
+    public void updateControl(@RequestBody Control control) {
+        try {
+            for (Control controlFromDb : controlRepository.findAll()) {
+                if (controlFromDb.getId().equals(control.getId())) {
+                    controlRepository.save(control);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     @DeleteMapping("/control/{id}")
     public void deleteControl(@PathVariable UUID id) {
-        controlDaoUtil.deleteById(id);
+        controlRepository.deleteById(id);
     }
 }

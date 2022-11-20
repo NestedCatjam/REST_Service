@@ -2,6 +2,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,8 +15,9 @@ import java.util.UUID;
 @Table(name = "Users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false)
+    @GeneratedValue
+    @Column(nullable = false, updatable = false, name = "user_Id")
+    @Type(type = "uuid-char")
     private UUID id;
 
     @Size(min = 2, message= "Name must be longer than 2 characters")

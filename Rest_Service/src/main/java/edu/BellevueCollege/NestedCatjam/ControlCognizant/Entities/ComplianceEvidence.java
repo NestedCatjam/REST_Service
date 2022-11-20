@@ -1,6 +1,7 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Blob;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class ComplianceEvidence{
     @Id
     @Column(name = "id_no", nullable = false)
+    @Type(type = "uuid-char")
     private UUID id;
 
     @Lob

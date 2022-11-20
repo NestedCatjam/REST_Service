@@ -3,6 +3,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class Control{
     @Id
     @Column(name = "control_id", nullable = false)
+    @Type(type = "uuid-char")
     private UUID id;
 
     @Column(name = "Control_Name", nullable = false)
