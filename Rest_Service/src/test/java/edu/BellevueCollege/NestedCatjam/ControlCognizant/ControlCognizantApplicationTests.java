@@ -1,8 +1,12 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import org.assertj.core.internal.bytebuddy.matcher.ElementMatchers;
+import org.json.JSONArray;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -119,6 +123,38 @@ class ControlCognizantApplicationTests {
 
 	}
 
+	@Test
+	public void getPosts() throws Exception {
+		var userWithPostsJson =
+          """
+		  {
+                    "id": null,
+                    "name": "Kurt Friedrich Gödel",
+                    "email": "gödel@email.com",
+                    "posts": [{ "id" : null, "content": "Test post 0" }, { "id": null, "content": "Test post 1" }, {"id": null, "content": "Test post 2"}]
+      	  }
+		  """;
+		postUser(
+          userWithPostsJson
+		);
+
+		var users = mvc.perform(get("/users")).andReturn().getResponse();
+		var json = users.getContentAsString();
+
+		var mapper = new ObjectMapper();
+		var usersJson = mapper.readTree(json);
+		assert usersJson.isArray();
+		var success = false;
+		var usersWithPostsJsonNode = mapper.readTree(userWithPostsJson);
+		for (JsonNode node : usersJson) {
+			if (node.equals(usersWithPostsJsonNode)) { success = true; break; }
+		}
+		assert success;
+
+
+
+
+	}
 
 	private ResultMatcher checkName(int at, String name) {
 		return jsonPath("$[" + at + "].name").value(name);
