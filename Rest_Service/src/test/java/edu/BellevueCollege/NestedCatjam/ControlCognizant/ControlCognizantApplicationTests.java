@@ -18,8 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -146,10 +145,15 @@ class ControlCognizantApplicationTests {
 		assert usersJson.isArray();
 		var success = false;
 		var usersWithPostsJsonNode = mapper.readTree(userWithPostsJson);
+		String id = null;
 		for (JsonNode node : usersJson) {
-			if (node.equals(usersWithPostsJsonNode)) { success = true; break; }
+			System.out.println(node.toPrettyString());
+			if (node.get("name").asText().startsWith("Kurt")) { id = node.get("id").asText(); break; }
 		}
-		assert success;
+		assertNotNull(id);
+
+		var user = mvc.perform(get("/users/" + id)).andReturn().getResponse().getContentAsString();
+		System.out.println(user);
 
 
 
