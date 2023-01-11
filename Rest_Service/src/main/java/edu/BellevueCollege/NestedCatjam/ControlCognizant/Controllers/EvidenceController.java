@@ -2,36 +2,75 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.ComplianceEvidence;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFoundException;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.EvidenceDaoUtil;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.UUID;
 
-@RestController
+@RestController("/api/evidence")
 public class EvidenceController {
     @Autowired
-    EvidenceDaoUtil evidenceDaoUtil;
+    EvidenceRepository evidenceRepository;
 
-    @GetMapping("/evidence")
-    public List<ComplianceEvidence> getAllEvidence() {
-        return evidenceDaoUtil.findAll();
-    }
     @GetMapping("/evidence/{id}")
     public ComplianceEvidence getEvidence(@PathVariable UUID id) {
-        return evidenceDaoUtil.findEvidence(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
+        try {
+            return evidenceRepository.findById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
+        } catch (ControlNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     @PostMapping("/evidence")
-    public void createEvidence(ComplianceEvidence evidence) {
-        evidenceDaoUtil.save(evidence);
+    public ComplianceEvidence createEvidence(@RequestParam String id, @RequestBody String evidence) {
+        try {
+            ComplianceEvidence newEvidence = new ComplianceEvidence();
+            newEvidence.setId(UUID.fromString(id));
+            // Write code to convert a file as a byte array somewhere around here to save to the db
+
+            return evidenceRepository.save(newEvidence);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     @PutMapping("/evidence/{id}")
-    public void updateEvidence(@PathVariable UUID id, @RequestBody ComplianceEvidence evidence) {
-        evidenceDaoUtil.updateById(evidence);
+    @Transactional
+    public ComplianceEvidence updateEvidence(@RequestBody ComplianceEvidence evidence) {
+        try {
+            for (ComplianceEvidence evidenceFromDb : evidenceRepository.findAll()) {
+                if (evidenceFromDb.getId().equals(evidence.getId())) {
+                    return evidenceRepository.save(evidence);
+                }
+            } throw new ControlNotFoundException("control with id " + evidence.getId() + " not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     @DeleteMapping("/evidence/{id}")
+    @Transactional
     public void deleteEvidence(@PathVariable UUID id) {
-        evidenceDaoUtil.deleteById(id);
+        try {
+            for (ComplianceEvidence evidenceFromDb : evidenceRepository.findAll()) {
+                if (evidenceFromDb.getId().equals(id)) {
+                    evidenceRepository.delete(evidenceFromDb);
+                }
+            } throw new ControlNotFoundException("control with id " + id + " not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private byte[] convertToByteArray(File file) throws IOException {
+        FileInputStream fl = new FileInputStream(file);
+        byte[] arr = new byte[(int)file.length()];
+        fl.read(arr);
+        fl.close();
+        return arr;
     }
 }

@@ -1,8 +1,7 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
-
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,22 +13,40 @@ import java.util.UUID;
 @Data
 @Table(name = "Users")
 public class User {
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_no", nullable = false, updatable = false)
-    private Long id;
-
+    @GeneratedValue
     @Id
-    private UUID uuid;
+    @Column(nullable = false, updatable = false, name = "user_Id")
+    @Type(type = "uuid-char")
+    private UUID id;
 
     @Size(min = 2, message= "Name must be longer than 2 characters")
-    @Column(name = "user_name")
-    private String name;
+    @Column(name = "first_name")
+    private String first_name;
 
-    @Column(name = "user_email")
+    @Column(name = "last_name")
+    private String last_name;
+
+    @Column(name = "user_Email")
     @Email
     private String email;
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<Post> posts;
+
+    @ToString.Exclude
+    @Column(name = "user_Password")
+    private String password;
+
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "user_Name")
+    private String userName;
+    @Column(name = "user_Enabled")
+    private boolean enabled;
+    @Column(name = "user_Locked")
+    private boolean locked;
+    @Column(name = "credentials")
+    private boolean credentialsExpired;
  }

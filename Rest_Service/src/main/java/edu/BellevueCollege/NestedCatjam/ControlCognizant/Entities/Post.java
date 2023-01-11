@@ -3,6 +3,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -14,12 +15,14 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "postno")
-    private int id;
+    private Integer id;
 
     @Column(name = "Post_Content")
+    @Type(type = "text")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // @JsonIgnore might cause an infinite loop if removed.  I'm not sure.
     @JsonIgnore
     @ToString.Exclude
     private User user;

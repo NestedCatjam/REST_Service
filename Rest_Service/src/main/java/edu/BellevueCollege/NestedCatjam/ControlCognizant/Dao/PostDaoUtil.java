@@ -13,7 +13,7 @@ public class PostDaoUtil {
     }
     public void save(Post post) {
         Integer temp = post.getId();
-        if (temp.equals(null)) {
+        if (Objects.equals(temp, null)) {
             post.setId(POSTS.size() + 1);
         }
         POSTS.add(post);
