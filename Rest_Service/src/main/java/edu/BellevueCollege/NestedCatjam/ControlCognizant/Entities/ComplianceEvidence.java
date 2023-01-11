@@ -16,6 +16,7 @@ public class ComplianceEvidence{
     // constructor
     public ComplianceEvidence() {
     }
+
     @Id
     @GeneratedValue
     @Column(name = "id_no", nullable = false)
@@ -28,6 +29,9 @@ public class ComplianceEvidence{
     @ManyToMany
     @JsonIgnore
     private List<Control> controlsImplemented;
+
+    String description;
+
 
     @ManyToOne
     @JsonIgnore

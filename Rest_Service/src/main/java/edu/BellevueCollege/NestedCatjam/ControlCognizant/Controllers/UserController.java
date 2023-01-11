@@ -33,7 +33,9 @@ public class UserController {
     @GetMapping("/users/{id}")
     public Optional<User> getUserById(@PathVariable UUID id) {
         try {
-            return repository.findById(id);
+            return repository.findById(id).or(() -> {
+                throw new UserNotFoundException("user with id " + id + " not found");
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -43,35 +45,43 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable UUID id) throws UserNotFoundException {
         try {
-            repository.deleteById(id);
+            for(User user : repository.findAll()) {
+                if(user.getId().equals(id)) {
+                    repository.delete(user);
+                }
+            } throw new UserNotFoundException("user with id " + id + " not found");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     @PostMapping("/users")
-    public void postUser(@Valid @RequestBody User User) {
+    public User postUser(@Valid @RequestBody User User) {
         try {
             for (User user : repository.findAll()) {
                 if (user.getId().equals(User.getId())) {
                     throw new IllegalArgumentException("User with id " + User.getId() + " already exists.");
                 }
+                if (User.getUserName().equals(user.getUserName())) {
+                    throw new IllegalArgumentException("User with username " + User.getUserName() + " already exists.");
+                }
             }
-            repository.save(User);
+            return repository.save(User);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
+        return null;
     }
     @PutMapping("/users/{id}")
-    public void updateUser(@RequestBody User User) {
+    public User updateUser(@RequestBody User User) {
         try {
             for (User user : repository.findAll()) {
                 if (user.getId().equals(User.getId())) {
-                    repository.save(User);
-                    break;
+                    return repository.save(User);
                 }
-            }
+            } throw new UserNotFoundException("User with id " + User.getId() + " not found");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

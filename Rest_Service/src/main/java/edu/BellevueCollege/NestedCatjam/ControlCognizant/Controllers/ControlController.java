@@ -5,7 +5,6 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFo
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.ControlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -33,12 +32,13 @@ public class ControlController {
         return null;
     }
     @PostMapping("/control")
-    public void createControl(@RequestBody Control control) {
+    public Control createControl(@RequestBody Control control) {
         try {
-            controlRepository.save(control);
+            return controlRepository.save(control);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
     @PutMapping("/control/{id}")
     public void updateControl(@RequestBody Control control) {
@@ -46,7 +46,7 @@ public class ControlController {
             for (Control controlFromDb : controlRepository.findAll()) {
                 if (controlFromDb.getId().equals(control.getId())) {
                     controlRepository.save(control);
-                    break;
+                    return;
                 }
             } throw new ControlNotFoundException("control with id " + control.getId() + " not found");
         } catch (Exception e) {
@@ -59,9 +59,9 @@ public class ControlController {
             for (Control controlFromDb : controlRepository.findAll()) {
                 if (controlFromDb.getId().equals(id)) {
                     controlRepository.delete(controlFromDb);
-                    break;
-                } throw new ControlNotFoundException("control with id " + id + " not found");
-            }
+                    return;
+                }
+            } throw new ControlNotFoundException("control with id " + id + " not found");
         } catch (Exception e) {
             e.printStackTrace();
         }

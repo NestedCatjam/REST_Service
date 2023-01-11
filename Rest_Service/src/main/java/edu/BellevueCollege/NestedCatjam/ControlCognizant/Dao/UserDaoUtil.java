@@ -29,7 +29,7 @@ public class UserDaoUtil {
     public void updateById(User user) {
         for (User u : PEOPLE) {
             if (u.getId().equals(user.getId())) {
-                u.setName(user.getName());
+                u.setFirst_name(user.getFirst_name());
                 u.setEmail(user.getEmail());
                 u.setPosts(user.getPosts());
             }
