@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
+@RestController("/api/controls")
 public class ControlController {
     @Autowired
     public ControlRepository controlRepository;

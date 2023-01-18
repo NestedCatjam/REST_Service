@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.UUID;
 
-@RestController
+@RestController("/api/evidence")
 public class EvidenceController {
     @Autowired
     EvidenceRepository evidenceRepository;

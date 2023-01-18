@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@RestController
+@RestController("/api/user")
 public class UserController {
     @Autowired
     private UserRepository repository;

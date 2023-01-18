@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
-@RestController
+@RestController("/api/posts")
 public class PostController {
     @Autowired
     private PostRepository postRepository;
