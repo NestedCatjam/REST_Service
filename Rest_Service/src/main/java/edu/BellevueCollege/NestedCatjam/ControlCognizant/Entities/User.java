@@ -34,9 +34,7 @@ public class User {
     @ToString.Exclude
     private List<Post> posts;
 
-    @ToString.Exclude
-    @Column(name = "user_Password")
-    private String password;
+
 
     @Column(name = "role")
     private String role;

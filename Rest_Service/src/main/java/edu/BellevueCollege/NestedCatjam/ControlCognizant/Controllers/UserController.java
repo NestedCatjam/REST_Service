@@ -1,10 +1,11 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
+import com.auth0.client.mgmt.ManagementAPI;
+import com.auth0.client.mgmt.filter.UserFilter;
+import com.auth0.exception.Auth0Exception;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.UserDaoUtil;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +21,17 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
+    private ManagementAPI managementAPI;
     @GetMapping("/users")
-    public List<User> retrieveAllUsers() {
-        try {
-            return repository.findAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public List<com.auth0.json.mgmt.users.User> retrieveAllUsers() throws Auth0Exception {
+//        try {
+//            return repository.findAll();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        var results= managementAPI.users().list(new UserFilter()).execute();
+
+        return results.getItems();
     }
 
     @GetMapping("/users/{id}")
