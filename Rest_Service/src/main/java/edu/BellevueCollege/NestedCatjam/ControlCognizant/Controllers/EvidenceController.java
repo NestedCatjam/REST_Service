@@ -14,9 +14,13 @@ import java.util.UUID;
 
 @RestController("/api/evidence")
 public class EvidenceController {
-    @Autowired
+
     EvidenceRepository evidenceRepository;
 
+    @Autowired
+    public EvidenceController(EvidenceRepository evidenceRepository) {
+        this.evidenceRepository = evidenceRepository;
+    }
     @GetMapping("/evidence/{id}")
     public ComplianceEvidence getEvidence(@PathVariable UUID id) {
         try {
