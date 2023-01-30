@@ -6,6 +6,7 @@ import com.auth0.exception.Auth0Exception;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,9 @@ public class UserController {
     private UserRepository repository;
 
     private ManagementAPI managementAPI;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
     @GetMapping("/users")
     public List<com.auth0.json.mgmt.users.User> retrieveAllUsers() throws Auth0Exception {
 //        try {
