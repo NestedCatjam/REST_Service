@@ -10,9 +10,13 @@ import java.util.UUID;
 
 @RestController("/api/controls")
 public class ControlController {
-    @Autowired
+
     public ControlRepository controlRepository;
 
+    @Autowired
+    public ControlController(ControlRepository repository) {
+        this.controlRepository = repository;
+    }
     @GetMapping("/control")
     public List<Control> getAllControls() {
         try {

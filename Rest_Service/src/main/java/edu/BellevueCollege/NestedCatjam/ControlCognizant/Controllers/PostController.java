@@ -18,11 +18,15 @@ import java.util.UUID;
 
 @RestController("/api/posts")
 public class PostController {
-    @Autowired
     private PostRepository postRepository;
-    @Autowired
+
     private UserRepository userRepository;
 
+    @Autowired
+    public PostController(PostRepository postRepository, UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+    }
     @GetMapping("/users/{id}/posts")
     public List<Post> retrieveAllPosts(@PathVariable UUID id) {
         try {
