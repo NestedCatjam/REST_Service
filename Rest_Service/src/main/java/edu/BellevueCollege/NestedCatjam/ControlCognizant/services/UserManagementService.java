@@ -30,17 +30,29 @@ public class UserManagementService {
     public String clientSecret;
 
     @Value("${env.AUTH0_MANAGEMENT_AUDIENCE}") public String audience;
+    private AuthAPI authAPI;
+
     @Autowired
     public UserManagementService() {
 
     }
     // TODO: fix this
     private ManagementAPI getApi() throws Auth0Exception{
-        if (api == null) {
-            final var api = new AuthAPI(domain, clientID, clientSecret);
-            final var token = api.requestToken(audience).execute();
-            this.api = new ManagementAPI(domain, token.getAccessToken());
+        if (null == authAPI) {
+            authAPI = new AuthAPI(domain, clientID, clientSecret);
+
+
         }
+
+        final var token = authAPI.requestToken(audience).execute();
+        System.out.println(token);
+
+        if (null == this.api) {
+            this.api = new ManagementAPI(domain, token.getAccessToken());
+        } else {
+            this.api.setApiToken(token.getAccessToken());
+        }
+
         return api;
     }
     // TODO: consider returning different type to better encapsulate the use of auth0 and reduce coupling
