@@ -7,6 +7,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFound
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +23,8 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
-    private ManagementAPI managementAPI;
-
+    @Autowired
+    private UserManagementService userManagementService;
     @Autowired
     private ApplicationProperties applicationProperties;
     @GetMapping("/users")
@@ -33,9 +34,13 @@ public class UserController {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        var results= managementAPI.users().list(new UserFilter()).execute();
+        try {
+            return userManagementService.getUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
 
-        return results.getItems();
+        }
     }
 
     @GetMapping("/users/{id}")
