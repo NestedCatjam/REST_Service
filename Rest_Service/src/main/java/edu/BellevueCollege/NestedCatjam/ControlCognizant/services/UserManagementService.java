@@ -60,4 +60,7 @@ public class UserManagementService {
         return getApi().users().list(new UserFilter()).execute().getItems();
     }
 
+    public void update(String userId, User user) throws Auth0Exception {
+        getApi().users().update(userId, user);
+    }
 }

@@ -85,16 +85,8 @@ public class UserController {
         return null;
     }
     @PutMapping("/users/{id}")
-    public User updateUser(@RequestBody User User) {
-        try {
-            for (User user : repository.findAll()) {
-                if (user.getId().equals(User.getId())) {
-                    return repository.save(User);
-                }
-            } throw new UserNotFoundException("User with id " + User.getId() + " not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void updateUser(@RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
+
+        userManagementService.update(user.getId(), user);
     }
 }
