@@ -85,8 +85,8 @@ public class UserController {
         return null;
     }
     @PutMapping("/users/{id}")
-    public void updateUser(@RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
+    public void updateUser(@PathVariable String id, @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
 
-        userManagementService.update(user.getId(), user);
+        userManagementService.update(id, user);
     }
 }

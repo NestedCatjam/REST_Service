@@ -1,5 +1,6 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.services;
 
+import com.auth0.client.HttpOptions;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.UserFilter;
@@ -40,11 +41,9 @@ public class UserManagementService {
     private ManagementAPI getApi() throws Auth0Exception{
         if (null == authAPI) {
             authAPI = new AuthAPI(domain, clientID, clientSecret);
-
-
         }
-
-        final var token = authAPI.requestToken(audience).execute();
+        final var request = authAPI.requestToken(audience);
+        final var token = request.execute();
         System.out.println(token);
 
         if (null == this.api) {
@@ -61,6 +60,6 @@ public class UserManagementService {
     }
 
     public void update(String userId, User user) throws Auth0Exception {
-        getApi().users().update(userId, user);
+        final var result = getApi().users().update(userId, user).execute();
     }
 }
