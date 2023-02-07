@@ -4,26 +4,33 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
-@Entity
 @Data
-@Table(name ="posts")
+@Entity
+@Table(name = "posts")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "postno")
-    private Integer id;
+    @Column(name = "postid")
+    private long id;
 
-    @Column(name = "Post_Content")
-    @Type(type = "text")
+    @Column(name = "content")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonIgnore might cause an infinite loop if removed.  I'm not sure.
-    @JsonIgnore
-    @ToString.Exclude
+    @Column(name = "date")
+    private LocalDate date;
+    @ManyToOne
+    private Chatlog chatlog;
+
+    @ManyToOne
     private User user;
+
+    @OneToOne
+    private Evidence evidence;
 }

@@ -13,11 +13,10 @@ import java.util.UUID;
 @Data
 @Table(name = "Users")
 public class User {
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
-    @Column(nullable = false, updatable = false, name = "user_Id")
-    @Type(type = "uuid-char")
-    private UUID id;
+    @Column(name = "user_id")
+    private long id;
 
     @Size(min = 2, message= "Name must be longer than 2 characters")
     @Column(name = "first_name")
@@ -30,9 +29,9 @@ public class User {
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "user")
     @ToString.Exclude
-    private List<Post> posts;
+    @ManyToMany
+    private List<Chatlog> chatlogs;
 
     @ToString.Exclude
     @Column(name = "user_Password")
