@@ -1,10 +1,13 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
+import com.auth0.client.mgmt.ManagementAPI;
+import com.auth0.client.mgmt.filter.UserFilter;
+import com.auth0.exception.Auth0Exception;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Dao.UserDaoUtil;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
-import org.apache.commons.lang3.NotImplementedException;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +23,24 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private UserManagementService userManagementService;
+    @Autowired
+    private ApplicationProperties applicationProperties;
     @GetMapping("/users")
-    public List<User> retrieveAllUsers() {
+    public List<com.auth0.json.mgmt.users.User> retrieveAllUsers() throws Auth0Exception {
+//        try {
+//            return repository.findAll();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         try {
-            return repository.findAll();
+            return userManagementService.getUsers();
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
+
         }
-        return null;
     }
 
     @GetMapping("/users/{id}")
@@ -72,16 +85,8 @@ public class UserController {
         return null;
     }
     @PutMapping("/users/{id}")
-    public User updateUser(@RequestBody User User) {
-        try {
-            for (User user : repository.findAll()) {
-                if (user.getId().equals(User.getId())) {
-                    return repository.save(User);
-                }
-            } throw new UserNotFoundException("User with id " + User.getId() + " not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void updateUser(@PathVariable String id, @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
+
+        userManagementService.update(id, user);
     }
 }
