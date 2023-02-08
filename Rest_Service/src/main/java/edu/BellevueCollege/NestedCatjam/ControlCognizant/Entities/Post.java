@@ -1,29 +1,35 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.UUID;
+import java.time.LocalDate;
 
-@Entity
 @Data
-@Table(name ="posts")
+@Entity
+@Table(name = "posts")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "postno")
-    private Integer id;
+    @Column(name = "postid")
+    private long id;
 
-    @Column(name = "Post_Content")
-    @Type(type = "text")
+    @Column(name = "content")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonIgnore might cause an infinite loop if removed.  I'm not sure.
-    @JsonIgnore
-    @ToString.Exclude
-    private User user;
+    @Column(name = "date")
+    private LocalDate date;
+
+    @ManyToOne
+    private ChatLog chatlog;
+
+    @ManyToOne
+    private ChatLog log;
+
+    @OneToOne
+    private Evidence evidence;
+
+    public Post() {
+        date = LocalDate.now();
+    }
 }
