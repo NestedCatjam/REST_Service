@@ -56,16 +56,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable UUID id) throws UserNotFoundException {
-        try {
-            for(User user : repository.findAll()) {
-                if(user.getId().equals(id)) {
-                    repository.delete(user);
-                }
-            } throw new UserNotFoundException("user with id " + id + " not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void deleteUser(@PathVariable String id) throws Auth0Exception {
+        System.out.println(id);
+        userManagementService.delete(id);
     }
     @PostMapping("/users")
     public User postUser(@Valid @RequestBody User User) {

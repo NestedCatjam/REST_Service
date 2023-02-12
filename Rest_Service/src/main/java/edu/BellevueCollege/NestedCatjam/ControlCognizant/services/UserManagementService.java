@@ -62,4 +62,8 @@ public class UserManagementService {
     public void update(String userId, User user) throws Auth0Exception {
         final var result = getApi().users().update(userId, user).execute();
     }
+
+    public void delete(String userId) throws Auth0Exception {
+        getApi().users().delete(userId).execute();
+    }
 }
