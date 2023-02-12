@@ -66,4 +66,9 @@ public class UserManagementService {
     public void delete(String userId) throws Auth0Exception {
         getApi().users().delete(userId).execute();
     }
+
+    public User addUser(User user) throws Auth0Exception {
+        return getApi().users().create(user).execute();
+
+    }
 }

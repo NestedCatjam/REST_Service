@@ -61,21 +61,9 @@ public class UserController {
         userManagementService.delete(id);
     }
     @PostMapping("/users")
-    public User postUser(@Valid @RequestBody User User) {
-        try {
-            for (User user : repository.findAll()) {
-                if (user.getId().equals(User.getId())) {
-                    throw new IllegalArgumentException("User with id " + User.getId() + " already exists.");
-                }
-                if (User.getUserName().equals(user.getUserName())) {
-                    throw new IllegalArgumentException("User with username " + User.getUserName() + " already exists.");
-                }
-            }
-            return repository.save(User);
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public com.auth0.json.mgmt.users.User postUser(@Valid @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
+        System.out.println(user.getEmail().toString());
+        return userManagementService.addUser(user);
     }
     @PutMapping("/users/{id}")
     public void updateUser(@PathVariable String id, @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
