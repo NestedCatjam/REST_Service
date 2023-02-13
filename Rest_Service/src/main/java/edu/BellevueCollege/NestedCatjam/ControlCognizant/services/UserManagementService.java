@@ -6,6 +6,7 @@ import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
+import com.auth0.json.mgmt.Role;
 import com.auth0.json.mgmt.users.User;
 import com.auth0.net.TokenRequest;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
@@ -70,5 +71,9 @@ public class UserManagementService {
     public User addUser(User user) throws Auth0Exception {
         return getApi().users().create(user).execute();
 
+    }
+
+    public void assignRole(String id, List<String> role) throws Auth0Exception {
+        getApi().users().addRoles(id, role).execute();
     }
 }

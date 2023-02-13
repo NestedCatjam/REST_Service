@@ -9,6 +9,8 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserReposi
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -69,5 +71,10 @@ public class UserController {
     public void updateUser(@PathVariable String id, @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
 
         userManagementService.update(id, user);
+    }
+
+    @PostMapping(value = "/users/{id}/roles", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void assignRole(@PathVariable String id, @RequestBody List<String> role) throws Auth0Exception {
+        userManagementService.assignRole(id, role);
     }
 }
