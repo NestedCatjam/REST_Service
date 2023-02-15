@@ -11,6 +11,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagement
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -58,6 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasAuthority('delete:users')")
     public void deleteUser(@PathVariable String id) throws Auth0Exception {
         System.out.println(id);
         userManagementService.delete(id);

@@ -34,4 +34,5 @@ public class AuthenticationErrorHandler implements AuthenticationEntryPoint {
     response.getWriter().write(json);
     response.flushBuffer();
   }
+
 }

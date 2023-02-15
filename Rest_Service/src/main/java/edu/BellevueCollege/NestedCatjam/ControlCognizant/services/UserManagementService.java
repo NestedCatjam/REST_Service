@@ -12,6 +12,7 @@ import com.auth0.net.TokenRequest;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +64,7 @@ public class UserManagementService {
     public void update(String userId, User user) throws Auth0Exception {
         final var result = getApi().users().update(userId, user).execute();
     }
+
 
     public void delete(String userId) throws Auth0Exception {
         getApi().users().delete(userId).execute();

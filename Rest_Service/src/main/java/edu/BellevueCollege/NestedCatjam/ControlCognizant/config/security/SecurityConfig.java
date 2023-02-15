@@ -15,6 +15,9 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+
 // https://developer.auth0.com/resources/code-samples/full-stack/hello-world/basic-role-based-access-control/spa/react-javascript/spring-java
 @Configuration
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class SecurityConfig {
 
     private final ApplicationProperties applicationProps;
 
+    private final AccessDenier accessDeniedHandler;
     @Bean
     public SecurityFilterChain httpSecurity(final HttpSecurity http) throws Exception {
         return http.authorizeRequests()
@@ -35,6 +39,7 @@ public class SecurityConfig {
                 .and()
                 .oauth2ResourceServer()
                 .authenticationEntryPoint(authenticationErrorHandler)
+                .accessDeniedHandler(accessDeniedHandler)
                 .jwt()
                 .decoder(makeJwtDecoder())
                 .jwtAuthenticationConverter(makePermissionsConverter())
