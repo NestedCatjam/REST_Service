@@ -14,9 +14,9 @@ public class ChatLog {
     @Column(name = "chatlogid")
     private long id;
 
-    @OneToMany(mappedBy = "log")
+    @OneToMany(mappedBy = "chatlog")
     private List<Post> posts;
 
-    @OneToOne
+    // TODO
     private Evidence evidence;
 }

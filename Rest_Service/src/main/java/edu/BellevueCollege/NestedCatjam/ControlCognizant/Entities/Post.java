@@ -20,14 +20,8 @@ public class Post {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToOne
+    @ManyToOne // TODO
     private ChatLog chatlog;
-
-    @ManyToOne
-    private ChatLog log;
-
-    @OneToOne
-    private Evidence evidence;
 
     public Post() {
         date = LocalDate.now();

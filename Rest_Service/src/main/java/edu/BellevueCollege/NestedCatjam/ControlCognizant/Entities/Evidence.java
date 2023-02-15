@@ -21,6 +21,9 @@ public class Evidence {
     @Column(name = "evidence_type")
     private String type;
 
+    @OneToMany() // TODO
+    private ChatLog chatlog;
+
     @Lob
     private Blob file;
 }
