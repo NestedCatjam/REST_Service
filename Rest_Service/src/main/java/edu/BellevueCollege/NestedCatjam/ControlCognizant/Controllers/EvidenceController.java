@@ -15,12 +15,12 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 
-@RestController("/api/evidence")
+@RestController
 public class EvidenceController {
     @Autowired
     EvidenceRepository evidenceRepository;
 
-    @GetMapping("get-evidence-by-id")
+    @GetMapping("/api/evidence/get-evidence-by-id")
     public String getEvidenceById(@RequestParam String id) {
         try {
             for (Evidence evidence : evidenceRepository.findAll()) {
@@ -37,7 +37,7 @@ public class EvidenceController {
         return "Evidence with id " + id + " not found";
     }
 
-    @PostMapping("post-evidence")
+    @PostMapping("/api/evidence/post-evidence")
     @Transactional
     public String postEvidence(@RequestBody Evidence evidence) {
         try {
@@ -48,7 +48,7 @@ public class EvidenceController {
         }
     }
 
-    @DeleteMapping("delete-evidence")
+    @DeleteMapping("/api/evidence/delete-evidence")
     @Transactional
     public String deleteEvidence(@RequestParam String id) {
         try {
@@ -63,7 +63,7 @@ public class EvidenceController {
         }
     }
 
-    @PutMapping("update-evidence")
+    @PutMapping("/api/evidence/update-evidence")
     @Transactional
     public String updateEvidence(@RequestParam String id, @RequestParam Evidence evidence) {
         try {

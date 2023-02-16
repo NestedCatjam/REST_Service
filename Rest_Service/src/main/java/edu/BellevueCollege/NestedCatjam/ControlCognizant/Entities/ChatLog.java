@@ -17,6 +17,6 @@ public class ChatLog {
     @OneToMany(mappedBy = "chatlog")
     private List<Post> posts;
 
-    // TODO
+    @ManyToOne
     private Evidence evidence;
 }

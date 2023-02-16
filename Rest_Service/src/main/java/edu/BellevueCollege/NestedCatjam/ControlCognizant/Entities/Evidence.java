@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,8 +23,8 @@ public class Evidence {
     @Column(name = "evidence_type")
     private String type;
 
-    @OneToMany() // TODO
-    private ChatLog chatlog;
+    @OneToMany(mappedBy = "evidence")
+    private List<ChatLog> chatlog;
 
     @Lob
     private Blob file;

@@ -20,7 +20,7 @@ public class Post {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToOne // TODO
+    @ManyToOne
     private ChatLog chatlog;
 
     public Post() {

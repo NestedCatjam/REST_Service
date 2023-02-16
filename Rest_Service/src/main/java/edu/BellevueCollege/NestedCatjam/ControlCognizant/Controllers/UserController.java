@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController("/api/user")
+@RestController
 public class UserController {
     @Autowired
     private UserRepository repository;
 
-    @GetMapping("/users")
+    @GetMapping("/api/users/get-all-users")
     public List<User> retrieveAllUsers() {
         try {
             return repository.findAll();
@@ -24,7 +24,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/api/users/user/{id}")
     public String getUserById(@PathVariable long id) {
         try {
             for (User user : repository.findAll()) {
@@ -39,7 +39,7 @@ public class UserController {
         return null;
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/api/users/user/{id}")
     public void deleteUser(@PathVariable long id) throws UserNotFoundException {
         try {
             for (User user : repository.findAll()) {
@@ -53,7 +53,7 @@ public class UserController {
             e.printStackTrace();
         }
     }
-    @PostMapping("/users")
+    @PostMapping("/api/users/post-user")
     public String postUser(@Valid @RequestBody User user) {
         try {
             repository.save(user);
@@ -63,7 +63,7 @@ public class UserController {
         }
         return "failed to save user";
     }
-    @PutMapping("/users/{id}")
+    @PutMapping("/api/users/user/{id}")
     public String updateUser(@RequestBody User user) {
         for(User u : repository.findAll()) {
             String tempID = String.valueOf(user.getId());

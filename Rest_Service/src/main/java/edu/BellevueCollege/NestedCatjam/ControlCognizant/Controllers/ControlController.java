@@ -13,7 +13,7 @@ public class ControlController {
     @Autowired
     public ControlRepository controlRepository;
 
-    @GetMapping("/control")
+    @GetMapping
     public List<Control> getAllControls() {
         try {
             return controlRepository.findAll();
