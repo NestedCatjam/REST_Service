@@ -36,5 +36,6 @@ public class Evidence {
         this.name = name;
         this.description = description;
         this.type = type;
+        this.base64 = base64;
     }
 }
