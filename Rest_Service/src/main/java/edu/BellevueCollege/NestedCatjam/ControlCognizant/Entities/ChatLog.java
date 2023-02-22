@@ -1,22 +1,25 @@
+
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Data
 @Table(name = "chatlog")
 public class ChatLog {
     @Id
-    @GeneratedValue
-    @Column(name = "chatlogid")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "chatlog_id")
     private long id;
 
-    @OneToMany(mappedBy = "chatlog")
-    private List<Post> posts;
+    @OneToMany(mappedBy = "chatlog", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "evidence_id")
     private Evidence evidence;
 }

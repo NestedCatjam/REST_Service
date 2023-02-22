@@ -5,8 +5,8 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Data
 @Entity
+@Data
 @Table(name = "posts")
 public class Post {
     @Id
@@ -21,7 +21,12 @@ public class Post {
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "chatlog_id")
     private ChatLog chatlog;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Post() {
         date = LocalDate.now();
