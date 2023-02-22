@@ -1,54 +1,40 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Evidence;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.SQLException;
 
 @RestController
 public class EvidenceController {
     @Autowired
-    EvidenceRepository evidenceRepository;
+    private EvidenceRepository evidenceRepository;
 
-    @GetMapping("/api/evidence/get-evidence-by-id")
-    public String getEvidenceById(@RequestParam String id) {
+    @GetMapping("/api/evidence")
+    @ResponseBody
+    public Evidence getEvidenceById(@RequestParam String id) {
         try {
-            for (Evidence evidence : evidenceRepository.findAll()) {
-                if (evidence.getId() == (Long.parseLong(id))) {
-                    byte[] bytes = toByteArray(evidence.getFile());
-                    return Base64.encodeBase64String(bytes);
-                } else {
-                    throw new EvidenceNotFoundException("Evidence with id " + id + " not found");
-                }
-            }
-        } catch (EvidenceNotFoundException | SQLException | IOException e) {
-            return e.getMessage();
+            return evidenceRepository.findEvidenceById(Long.parseLong(id));
+        } catch (EvidenceNotFoundException e) {
+            throw new EvidenceNotFoundException("Evidence with id " + id + " not found");
         }
-        return "Evidence with id " + id + " not found";
     }
 
-    @PostMapping("/api/evidence/post-evidence")
+    @PostMapping("/api/evidence")
     @Transactional
     public String postEvidence(@RequestBody Evidence evidence) {
         try {
             evidenceRepository.save(evidence);
             return "Evidence saved";
         } catch (EvidenceNotFoundException e) {
-            return e.getMessage();
+            return "Evidence not saved";
         }
     }
 
-    @DeleteMapping("/api/evidence/delete-evidence")
+    @DeleteMapping("/api/evidence")
     @Transactional
     public String deleteEvidence(@RequestParam String id) {
         try {
@@ -56,39 +42,30 @@ public class EvidenceController {
                 evidenceRepository.deleteById(Long.valueOf(id));
                 return "Evidence deleted";
             } else {
-                throw new ControlNotFoundException("Evidence with id " + id + " not found");
+                throw new EvidenceNotFoundException("Evidence with id " + id + " not found");
             }
         } catch (EvidenceNotFoundException e) {
-            return e.getMessage();
+            return "Evidence not deleted";
         }
     }
 
-    @PutMapping("/api/evidence/update-evidence")
+    @PutMapping("/api/evidence")
     @Transactional
-    public String updateEvidence(@RequestParam String id, @RequestParam Evidence evidence) {
+    public String updateEvidence(@RequestParam String id, @RequestBody Evidence evidence) {
         try {
             if (evidenceRepository.findById(Long.valueOf(id)).isPresent()) {
-                evidenceRepository.save(evidence);
+                Evidence repoEvidence = evidenceRepository.findEvidenceById(Long.parseLong(id));
+                repoEvidence.setName(evidence.getName());
+                repoEvidence.setDescription(evidence.getDescription());
+                repoEvidence.setType(evidence.getType());
+                repoEvidence.setBase64(evidence.getBase64());
+                evidenceRepository.save(repoEvidence);
                 return "Evidence updated";
             } else {
-                throw new ControlNotFoundException("Evidence with id " + id + " not found");
+                throw new EvidenceNotFoundException("Evidence with id " + id + " not found");
             }
         } catch (EvidenceNotFoundException e) {
-            return e.getMessage();
+            return "Evidence not updated";
         }
-    }
-
-    public static byte[] toByteArray(Blob fromBlob) throws SQLException, IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buf = new byte[4096];
-        InputStream is = fromBlob.getBinaryStream();
-        while (true) {
-            int data = is.read(buf);
-            if (data == -1) {
-                break;
-            }
-            baos.write(buf, 0, data);
-        }
-        return baos.toByteArray();
     }
 }

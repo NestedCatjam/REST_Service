@@ -4,87 +4,55 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.User;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserRepository repository;
 
-    @GetMapping("/api/users/get-all-users")
+    @GetMapping
+    @ResponseBody
     public List<User> retrieveAllUsers() {
-        try {
-            return repository.findAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return repository.findAll();
     }
 
-    @GetMapping("/api/users/user/{id}")
-    public String getUserById(@PathVariable long id) {
-        try {
-            for (User user : repository.findAll()) {
-                if (user.getId() == id) {
-                    return "user with id " + id + " found: " + user.toString();
-                }
-            }
-            throw new UserNotFoundException("user with id " + id + " not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+        return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/api/users/user/{id}")
-    public void deleteUser(@PathVariable long id) throws UserNotFoundException {
-        try {
-            for (User user : repository.findAll()) {
-                if (user.getId() == id) {
-                    repository.deleteById(id);
-                    return;
-                }
-            }
-            throw new UserNotFoundException("user with id " + id + " not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deleteUser(@PathVariable long id) {
+        repository.deleteById(id);
     }
-    @PostMapping("/api/users/post-user")
-    public String postUser(@Valid @RequestBody User user) {
-        try {
-            repository.save(user);
-            return "saved user with id: " + user.getId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "failed to save user";
+
+    @PostMapping
+    @Transactional
+    public ResponseEntity<String> postUser(@Valid @RequestBody User user) {
+        repository.save(user);
+        return new ResponseEntity<>("Saved user with id: " + user.getId(), HttpStatus.CREATED);
     }
-    @PutMapping("/api/users/user/{id}")
-    public String updateUser(@RequestBody User user) {
-        for(User u : repository.findAll()) {
-            String tempID = String.valueOf(user.getId());
-            if(u.getId() == u.getId()) {
-                u.setEmail(user.getEmail());
-                u.setUserName(user.getUserName());
-                u.setId(user.getId());
-                u.setEnabled(user.isEnabled());
-                u.setPassword(user.getPassword());
-                u.setEmail(user.getEmail());
-                u.setLast_name(user.getLast_name());
-                u.setFirst_name(user.getFirst_name());
-                u.setChatLogs(user.getChatLogs());
-                u.setLocked(user.isLocked());
-                u.setRole(user.getRole());
-                u.setCredentialsExpired(user.isCredentialsExpired());
-                return "updated user with id: " + u.getId() + " to " + String.valueOf(user.getId());
-            } else {
-                return "failed to update user with id: " + u.getId();
-            }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<String> updateUser(@RequestBody User user, @PathVariable long id) {
+        if (!repository.existsById(id)) {
+            throw new UserNotFoundException("User with id " + id + " not found");
         }
-        return "failed to update user";
+        user.setId(id);
+        repository.save(user);
+        return ResponseEntity.ok("Updated user with id: " + id);
     }
 }

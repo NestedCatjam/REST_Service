@@ -5,48 +5,47 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "user_id")
     private long id;
 
     @Size(min = 2, message= "Name must be longer than 2 characters")
     @Column(name = "first_name")
-    private String first_name;
+    private String firstName;
 
     @Column(name = "last_name")
-    private String last_name;
+    private String lastName;
 
-    @Column(name = "user_Email")
+    @Column(name = "user_email")
     @Email
     private String email;
 
-    @ToString.Exclude
-    @ManyToMany
-    private List<ChatLog> chatLogs;
-
-    @ToString.Exclude
-    @Column(name = "user_Password")
+    @Column(name = "user_password")
     private String password;
 
     @Column(name = "role")
     private String role;
 
-    @Column(name = "user_Name")
+    @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "user_Enabled")
+    @Column(name = "user_enabled")
     private boolean enabled;
 
-    @Column(name = "user_Locked")
+    @Column(name = "user_locked")
     private boolean locked;
 
     @Column(name = "credentials")
     private boolean credentialsExpired;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private ArrayList<Post> post;
 }

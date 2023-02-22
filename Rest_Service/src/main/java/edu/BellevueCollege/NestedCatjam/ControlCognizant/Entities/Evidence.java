@@ -3,15 +3,15 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.sql.SQLException;
 
 @Entity
 @Data
 public class Evidence {
     @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO)
+    @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE)
+    @Column(name = "evidence_id")
     private long id;
 
     @Column(name = "evidence_name")
@@ -23,9 +23,18 @@ public class Evidence {
     @Column(name = "evidence_type")
     private String type;
 
-    @OneToMany(mappedBy = "evidence")
-    private List<ChatLog> chatlog;
+    @Column(name = "evidence_file")
+    String base64;
 
-    @Lob
-    private Blob file;
+    @OneToOne(mappedBy = "evidence", cascade = CascadeType.ALL)
+    private ChatLog chatlog;
+
+    public Evidence() {
+    }
+
+    public Evidence(String name, String description, String type, String base64) throws SQLException, IOException {
+        this.name = name;
+        this.description = description;
+        this.type = type;
+    }
 }
