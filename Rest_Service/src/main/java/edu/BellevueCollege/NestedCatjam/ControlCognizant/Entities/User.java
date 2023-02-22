@@ -47,5 +47,5 @@ public class User {
     private boolean credentialsExpired;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private ArrayList<Post> post;
+    private List<Post> post;
 }

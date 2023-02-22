@@ -1,9 +1,11 @@
+
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,8 +17,9 @@ public class ChatLog {
     private long id;
 
     @OneToMany(mappedBy = "chatlog", cascade = CascadeType.ALL)
-    private ArrayList<Post> posts = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
-    @OneToOne(mappedBy = "chatlog", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "evidence_id")
     private Evidence evidence;
 }
