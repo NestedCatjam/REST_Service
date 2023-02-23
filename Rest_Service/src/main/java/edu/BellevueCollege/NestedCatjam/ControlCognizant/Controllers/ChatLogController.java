@@ -35,27 +35,28 @@ public class ChatLogController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedChatLog);
     }
 
-    @DeleteMapping("/{id}")
-    @Transactional
-    public ResponseEntity<String> deleteChatLog(@PathVariable Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return ResponseEntity.ok("ChatLog with id: " + id + " deleted.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @DeleteMapping("/{id}")
+//    @Transactional
+//    public ResponseEntity<String> deleteChatLog(@PathVariable Long id) {
+//        if (repository.existsById(id)) {
+//            repository.deleteById(id);
+//            return ResponseEntity.ok("ChatLog with id: " + id + " deleted.");
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
-    @PutMapping("/{id}")
-    @Transactional
-    public ResponseEntity<ChatLog> updateChatLog(@PathVariable Long id, @Valid @RequestBody ChatLog log) {
-        ChatLog existingChatLog = repository.findById(id).orElse(null);
-        if (existingChatLog == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            log.setId(id);
-            ChatLog updatedChatLog = repository.save(log);
-            return ResponseEntity.ok(updatedChatLog);
-        }
-    }
+//    @PutMapping("/{id}")
+//    @Transactional
+//    public ResponseEntity<ChatLog> updateChatLog(@PathVariable Long id, @Valid @RequestBody ChatLog log) {
+//        ChatLog existingChatLog = repository.findById(id).orElse(null);
+//        if (existingChatLog == null) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            log.setId(id);
+//
+//            ChatLog updatedChatLog = repository.save(log);
+//            return ResponseEntity.ok(updatedChatLog);
+//        }
+//    }
 }

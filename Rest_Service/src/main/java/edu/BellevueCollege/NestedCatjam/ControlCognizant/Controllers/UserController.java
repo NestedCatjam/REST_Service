@@ -2,26 +2,25 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.mgmt.users.User;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.UserNotFoundException;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.UserRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
-    @Autowired
-    private UserRepository repository;
+
 
     @Autowired private UserManagementService userManagementService;
 
-    @GetMapping("/api/users/get-all-users")
+    @GetMapping
+    @ResponseBody
     public List<User> retrieveAllUsers() throws Auth0Exception {
         try {
             return userManagementService.getUsers();
@@ -34,7 +33,8 @@ public class UserController {
 
 
 
-    @PostMapping("/api/users/post-user")
+    @PostMapping
+    @Transactional
     public String postUser(@Valid @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
         try {
             userManagementService.addUser(user);
@@ -45,27 +45,19 @@ public class UserController {
         }
     }
 
-    @GetMapping("/api/users/user/{id}")
+    @GetMapping("/{id}")
+    @ResponseBody
     public String getUserById(@PathVariable long id) {
-        try {
-            for (final var user : repository.findAll()) {
-                if (user.getId() == id) {
-                    return "user with id " + id + " found: " + user.toString();
-                }
-            }
-            throw new UserNotFoundException("user with id " + id + " not found");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        throw new NotImplementedException();
     }
 
-    @PostMapping(value = "/api/users/user/{id}/roles", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{id}/roles", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void assignRole(@PathVariable String id, @RequestBody List<String> role) throws Auth0Exception {
         userManagementService.assignRole(id, role);
     }
 
-    @DeleteMapping("/api/users/user/{id}")
+    @DeleteMapping("/{id}")
+    @Transactional
     public void deleteUser(@PathVariable String id) throws Auth0Exception {
         try {
             userManagementService.delete(id);
@@ -75,7 +67,8 @@ public class UserController {
         }
     }
 
-    @PutMapping("/api/users/user/{id}")
+    @PutMapping("/{id}")
+    @Transactional
     public void updateUser(@PathVariable String id, @RequestBody User user) throws Auth0Exception {
         userManagementService.update(id, user);
     }
