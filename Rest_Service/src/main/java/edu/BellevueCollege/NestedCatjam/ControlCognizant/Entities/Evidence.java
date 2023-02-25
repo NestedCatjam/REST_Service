@@ -29,10 +29,13 @@ public class Evidence {
     @OneToOne(mappedBy = "evidence", cascade = CascadeType.ALL)
     private ChatLog chatlog;
 
+    @ManyToOne
+    @JoinColumn(name = "implemented_control_id")
+    private Control implemented;
     public Evidence() {
     }
 
-    public Evidence(String name, String description, String type, String base64) throws SQLException, IOException {
+    public Evidence(String name, String description, String type, String base64)  {
         this.name = name;
         this.description = description;
         this.type = type;
