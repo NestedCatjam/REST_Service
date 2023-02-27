@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RestController("/api/controls")
+@RestController
+@RequestMapping("/api/controls")
 public class ControlController {
     @Autowired
     public ControlRepository controlRepository;
@@ -22,7 +23,7 @@ public class ControlController {
         }
         return null;
     }
-    @GetMapping("/control/{id}")
+    @GetMapping("/{id}")
     public Control getControl(@PathVariable UUID id) {
         try {
             return controlRepository.findById(id).orElseThrow(() -> new ControlNotFoundException("id = " + id));
@@ -31,7 +32,7 @@ public class ControlController {
         }
         return null;
     }
-    @PostMapping("/control")
+    @PostMapping
     public Control createControl(@RequestBody Control control) {
         try {
             return controlRepository.save(control);
@@ -40,7 +41,7 @@ public class ControlController {
         }
         return null;
     }
-    @PutMapping("/control/{id}")
+    @PutMapping("/{id}")
     public void updateControl(@RequestBody Control control) {
         try {
             for (Control controlFromDb : controlRepository.findAll()) {
@@ -53,7 +54,7 @@ public class ControlController {
             e.printStackTrace();
         }
     }
-    @DeleteMapping("/control/{id}")
+    @DeleteMapping("/{id}")
     public void deleteControl(@PathVariable UUID id) {
         try {
             for (Control controlFromDb : controlRepository.findAll()) {

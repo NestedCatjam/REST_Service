@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collection;
 
 @Entity
 @Data
@@ -26,8 +27,8 @@ public class Evidence {
     @Column(name = "evidence_file")
     String base64;
 
-    @OneToOne(mappedBy = "evidence", cascade = CascadeType.ALL)
-    private ChatLog chatlog;
+    @Column(name = "contributor_auth0_id")
+    private String contributorAuth0ID;
 
     @ManyToOne
     @JoinColumn(name = "implemented_control_id")
@@ -40,5 +41,16 @@ public class Evidence {
         this.description = description;
         this.type = type;
         this.base64 = base64;
+    }
+
+    @OneToMany(mappedBy = "evidence")
+    private Collection<Post> posts;
+
+    public Collection<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Collection<Post> posts) {
+        this.posts = posts;
     }
 }

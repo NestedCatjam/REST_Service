@@ -1,17 +1,44 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Evidence;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class EvidenceController {
     @Autowired
     private EvidenceRepository evidenceRepository;
+
+    @Autowired private ControlController controlController;
+
+    @GetMapping("/api/controls/{controlID}/evidence/")
+    public List<Evidence> getEvidenceFor(@PathVariable("controlID") UUID controlID) {
+        return evidenceRepository.findEvidenceByImplemented_Id(controlID);
+    }
+
+    @GetMapping("/api/controls/{controlID}/evidence/{evidenceID}")
+    public Evidence getEvidenceForById(@PathVariable("controlID") UUID controlID, @PathVariable("evidenceID") long evidenceID) {
+        return evidenceRepository.findEvidenceByIdAndImplemented_Id(evidenceID, controlID);
+    }
+
+    @PostMapping("/api/controls/{controlID}/evidence/")
+    @Transactional
+    public void postEvidenceFor(@PathVariable("controlID") UUID controlID, Authentication authentication, @RequestBody Evidence evidence) {
+        final var control = controlController.getControl(controlID);
+        final var contributorAuth0ID = authentication.getName();
+        evidence.setContributorAuth0ID(contributorAuth0ID);
+        evidence.setImplemented(control);
+        evidenceRepository.save(evidence);
+    }
+
 
     @GetMapping("/api/evidence")
     @ResponseBody

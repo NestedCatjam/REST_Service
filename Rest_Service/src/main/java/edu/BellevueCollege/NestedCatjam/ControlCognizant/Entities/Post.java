@@ -1,8 +1,10 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.ChatLogRepository;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,8 +26,9 @@ public class Post {
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "chatlog_id")
-    private ChatLog chatlog;
+    @JoinColumn(name = "evidence_id")
+    @JsonIgnore
+    private Evidence evidence;
 
 
     @Column(name = "auth0_user_id")
@@ -35,7 +38,14 @@ public class Post {
         date = LocalDate.now();
     }
     public Post(String content, String auth0UserID) {
+        this();
         this.content = content;
         this.auth0UserID = auth0UserID;
+
+    }
+
+    @JsonProperty
+    public long getEvidenceID() {
+        return evidence.getId();
     }
 }
