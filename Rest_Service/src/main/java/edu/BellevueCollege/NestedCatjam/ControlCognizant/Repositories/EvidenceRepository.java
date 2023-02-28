@@ -11,4 +11,7 @@ public interface EvidenceRepository extends JpaRepository<Evidence, Long> {
     List<Evidence> findEvidenceByImplemented_Id(UUID controlID);
 
     Evidence findEvidenceByIdAndImplemented_Id(long evidenceID, UUID controlID);
+
+    List<Evidence> findEvidencesByImplemented_IdAndContributorAuth0ID(UUID controlID, String contributorAuth0ID);
+    Evidence findEvidenceByIdAndImplemented_IdAndContributorAuth0ID(long evidenceID, UUID controlID, String contributorAuth0ID);
 }

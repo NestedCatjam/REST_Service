@@ -5,6 +5,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Evidence;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +21,29 @@ public class EvidenceController {
     @Autowired private ControlController controlController;
 
     @GetMapping("/api/controls/{controlID}/evidence/")
-    public List<Evidence> getEvidenceFor(@PathVariable("controlID") UUID controlID) {
-        return evidenceRepository.findEvidenceByImplemented_Id(controlID);
+    public List<Evidence> getEvidenceFor(Authentication authentication, @PathVariable("controlID") UUID controlID) {
+        if (canViewArbitraryEvidence(authentication)) {
+            return evidenceRepository.findEvidenceByImplemented_Id(controlID);
+        } else {
+            return evidenceRepository.findEvidencesByImplemented_IdAndContributorAuth0ID(controlID, authentication.getName());
+        }
+    }
+
+    private boolean canViewArbitraryEvidence(Authentication authentication) {
+        return authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("view:evidence"));
     }
 
     @GetMapping("/api/controls/{controlID}/evidence/{evidenceID}")
-    public Evidence getEvidenceForById(@PathVariable("controlID") UUID controlID, @PathVariable("evidenceID") long evidenceID) {
-        return evidenceRepository.findEvidenceByIdAndImplemented_Id(evidenceID, controlID);
+    public Evidence getEvidenceForById(Authentication authentication, @PathVariable("controlID") UUID controlID, @PathVariable("evidenceID") long evidenceID) {
+        if (canViewArbitraryEvidence(authentication)) {
+            return evidenceRepository.findEvidenceByIdAndImplemented_Id(evidenceID, controlID);
+        } else {
+            return evidenceRepository.findEvidenceByIdAndImplemented_IdAndContributorAuth0ID(evidenceID, controlID, authentication.getName());
+        }
     }
 
     @PostMapping("/api/controls/{controlID}/evidence/")
+    @PreAuthorize("hasAuthority(\"post:evidence\")")
     @Transactional
     public Evidence postEvidenceFor(@PathVariable("controlID") UUID controlID, Authentication authentication, @RequestBody Evidence evidence) {
         final var control = controlController.getControl(controlID);
