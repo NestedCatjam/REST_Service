@@ -31,12 +31,12 @@ public class EvidenceController {
 
     @PostMapping("/api/controls/{controlID}/evidence/")
     @Transactional
-    public void postEvidenceFor(@PathVariable("controlID") UUID controlID, Authentication authentication, @RequestBody Evidence evidence) {
+    public Evidence postEvidenceFor(@PathVariable("controlID") UUID controlID, Authentication authentication, @RequestBody Evidence evidence) {
         final var control = controlController.getControl(controlID);
         final var contributorAuth0ID = authentication.getName();
         evidence.setContributorAuth0ID(contributorAuth0ID);
         evidence.setImplemented(control);
-        evidenceRepository.save(evidence);
+        return evidenceRepository.save(evidence);
     }
 
 
