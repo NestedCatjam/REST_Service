@@ -35,14 +35,10 @@ public class UserController {
 
     @PostMapping
     @Transactional
-    public String postUser(@Valid @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
-        try {
-            userManagementService.addUser(user);
-            return "saved user with id: " + user.getId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Failed to save user with the following error: " + e.getMessage();
-        }
+    public User postUser(@Valid @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {
+       return userManagementService.addUser(user);
+
+
     }
 
     @GetMapping("/{id}")
