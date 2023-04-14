@@ -3,6 +3,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,7 +34,9 @@ public class Control {
     private String control_description;
 
     @Column(name= "control_mapping_id")
-    private long control_mapping_id;
+    @ManyToMany
+    @JoinColumn(name = "control_mapping_id")
+    private List<Control> control_mapping_id;
 
     public Control() {
     }
