@@ -1,7 +1,9 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Evidence;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotFoundException;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.ControlRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,7 +17,8 @@ public class EvidenceController {
     @Autowired
     private EvidenceRepository evidenceRepository;
 
-    @Autowired private ControlController controlController;
+    @Autowired
+    private ControlRepository controlRepository;
 
     @GetMapping("/api/controls/{controlID}/evidence/")
     public List<Evidence> getEvidenceFor(@PathVariable("controlID") long controlID) {
@@ -30,7 +33,7 @@ public class EvidenceController {
     @PostMapping("/api/controls/{controlID}/evidence/")
     @Transactional
     public Evidence postEvidenceFor(@PathVariable("controlID") long controlID, Authentication authentication, @RequestBody Evidence evidence) {
-        final var control = controlController.getControl(controlID);
+        Control control = controlRepository.findById(controlID).orElseThrow(() -> new EvidenceNotFoundException("Control with id " + controlID + " not found"));
         final var contributorAuth0ID = authentication.getName();
         evidence.setContributorAuth0ID(contributorAuth0ID);
         evidence.setImplemented(control);

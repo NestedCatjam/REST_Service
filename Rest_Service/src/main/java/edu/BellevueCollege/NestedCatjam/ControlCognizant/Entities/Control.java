@@ -33,10 +33,12 @@ public class Control {
     @Column(name = "control_description")
     private String control_description;
 
-    @Column(name= "control_mapping_id")
-    @ManyToMany
-    @JoinColumn(name = "control_mapping_id")
-    private List<Control> control_mapping_id;
+    @OneToMany(mappedBy = "equivalent_control")
+    private List<Control> mapped_controls;
+
+    @ManyToOne
+    @JoinColumn(name = "equivalent_control")
+    private Control equivalent_control;
 
     public Control() {
     }
