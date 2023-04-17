@@ -30,6 +30,8 @@ public class Evidence {
     @Column(name = "contributor_auth0_id")
     private String contributorAuth0ID;
 
+    private String organizationID;
+
     @ManyToOne
     @JoinColumn(name = "implemented_control_id")
     private Control implemented;
