@@ -99,4 +99,13 @@ public class UserManagementService {
     public void removeMember(String organizationID, String userID) throws Auth0Exception {
         getApi().organizations().deleteMembers(organizationID, new Members(List.of(userID))).execute();
     }
+
+    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
+        final var api = getApi();
+        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
+        for (var organization : organizations) {
+            api.organizations().getMembers(organization.getId(), new PageFilter())
+        }
+
+    }
 }
