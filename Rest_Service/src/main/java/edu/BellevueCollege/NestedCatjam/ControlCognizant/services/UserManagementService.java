@@ -11,6 +11,7 @@ import com.auth0.json.mgmt.Role;
 import com.auth0.json.mgmt.organizations.Member;
 import com.auth0.json.mgmt.organizations.Members;
 import com.auth0.json.mgmt.organizations.Organization;
+import com.auth0.json.mgmt.organizations.Roles;
 import com.auth0.json.mgmt.users.User;
 import com.auth0.net.TokenRequest;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -100,12 +103,26 @@ public class UserManagementService {
         getApi().organizations().deleteMembers(organizationID, new Members(List.of(userID))).execute();
     }
 
-    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
+    public void assignRole(Authentication authentication, String userID, Roles roles) throws Auth0Exception {
         final var api = getApi();
-        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
-        for (var organization : organizations) {
-            api.organizations().getMembers(organization.getId(), new PageFilter())
+        final var userOrganizations = api.users().getOrganizations(userID, new PageFilter()).execute().getItems().stream().map(userOrganization -> userOrganization.getId()).collect(Collectors.toCollection(HashSet::new));
+        final var adminOrganizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
+        adminOrganizations.removeIf(organization -> !userOrganizations.contains(organization.getId()));
+        final var organizations = adminOrganizations;
+        for (final var organization : organizations) {
+            api.organizations().addRoles(organization.getId(), userID, roles).execute();
         }
 
+
+
     }
+
+//    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
+//        final var api = getApi();
+//        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
+//        for (var organization : organizations) {
+//            api.organizations().getMembers(organization.getId(), new PageFilter());
+//        }
+//
+//    }
 }
