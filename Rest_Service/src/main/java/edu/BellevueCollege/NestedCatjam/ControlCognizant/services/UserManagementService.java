@@ -117,6 +117,12 @@ public class UserManagementService {
 
     }
 
+    public Organization createOrganization(String name) throws Auth0Exception {
+        final var api = getApi();
+        final var organization = new Organization();
+        organization.setName(name); organization.setDisplayName(name);
+        return api.organizations().create(organization).execute();
+    }
 //    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
 //        final var api = getApi();
 //        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
