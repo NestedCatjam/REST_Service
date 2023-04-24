@@ -99,8 +99,17 @@ public class UserManagementService {
         }).toList();
     }
 
+    public List<Member> getMembers(String organizationID) throws Auth0Exception {
+        final var api = getApi();
+        return api.organizations().getMembers(organizationID, new PageFilter()).execute().getItems();
+    }
+
     public void removeMember(String organizationID, String userID) throws Auth0Exception {
         getApi().organizations().deleteMembers(organizationID, new Members(List.of(userID))).execute();
+    }
+
+    public void addMember(String organizationID, String userID) throws Auth0Exception {
+        getApi().organizations().addMembers(organizationID, new Members(List.of(userID))).execute();
     }
 
     public void assignRole(Authentication authentication, String userID, Roles roles) throws Auth0Exception {
@@ -117,12 +126,20 @@ public class UserManagementService {
 
     }
 
-    public Organization createOrganization(String name) throws Auth0Exception {
+    public Organization createOrganization(Organization organization) throws Auth0Exception {
         final var api = getApi();
-        final var organization = new Organization();
-        organization.setName(name); organization.setDisplayName(name);
         return api.organizations().create(organization).execute();
     }
+
+    public void addUser(Authentication authentication, String userID) throws Auth0Exception {
+        final var api = getApi();
+        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
+        for (final var organization : organizations) {
+            api.organizations().addMembers(organization.getId(), new Members(List.of(userID)));
+        }
+
+    }
+
 //    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
 //        final var api = getApi();
 //        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
