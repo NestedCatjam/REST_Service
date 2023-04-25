@@ -31,8 +31,6 @@ public class UserController {
         }
     }
 
-
-
     @PostMapping
     @Transactional
     public User postUser(@Valid @RequestBody com.auth0.json.mgmt.users.User user) throws Auth0Exception {

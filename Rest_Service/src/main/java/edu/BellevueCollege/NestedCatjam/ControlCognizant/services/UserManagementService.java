@@ -1,15 +1,10 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.services;
 
-import com.auth0.client.HttpOptions;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
-import com.auth0.json.auth.TokenHolder;
-import com.auth0.json.mgmt.Role;
 import com.auth0.json.mgmt.users.User;
-import com.auth0.net.TokenRequest;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
