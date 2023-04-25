@@ -10,9 +10,9 @@ import java.util.List;
 @Table(name = "controls")
 public class Control {
     @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "control_id")
-    private long control_id;
+    private long id;
 
     @Column(name = "control_function")
     private String control_function;
@@ -27,18 +27,19 @@ public class Control {
     private String control_subcategory_id;
 
     @Column(name = "control_name")
-    @Size(min = 2, message= "Name must be longer than 2 characters")
     private String control_name;
 
     @Column(name = "control_description")
     private String control_description;
 
-    @OneToMany(mappedBy = "equivalent_control")
-    private List<Control> mapped_controls;
+    // Add a new field to reference many Control entities
+    @OneToMany(mappedBy = "parentControl")
+    private List<Control> mappedControls;
 
+    // Add a new field to reference the parent Control entity
     @ManyToOne
-    @JoinColumn(name = "equivalent_control")
-    private Control equivalent_control;
+    @JoinColumn(name = "parent_control_id")
+    private Control parentControl;
 
     public Control() {
     }
