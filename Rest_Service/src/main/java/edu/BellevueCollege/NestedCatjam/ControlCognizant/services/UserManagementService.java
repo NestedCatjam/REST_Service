@@ -8,10 +8,7 @@ import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
 import com.auth0.json.mgmt.Role;
-import com.auth0.json.mgmt.organizations.Member;
-import com.auth0.json.mgmt.organizations.Members;
-import com.auth0.json.mgmt.organizations.Organization;
-import com.auth0.json.mgmt.organizations.Roles;
+import com.auth0.json.mgmt.organizations.*;
 import com.auth0.json.mgmt.users.User;
 import com.auth0.net.TokenRequest;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
@@ -129,6 +126,17 @@ public class UserManagementService {
     public Organization createOrganization(Organization organization) throws Auth0Exception {
         final var api = getApi();
         return api.organizations().create(organization).execute();
+    }
+
+    public Organization createOrganization(Organization organization, Authentication authentication) throws Auth0Exception {
+        final var result  = createOrganization(organization);
+        getApi().organizations().addMembers(result.getId(), new Members(List.of(authentication.getName()))).execute();
+        return result;
+    }
+
+    public OrganizationsPage getOrganizations(Authentication authentication) throws Auth0Exception {
+        final var api = getApi();
+        return api.users().getOrganizations(authentication.getName(), new PageFilter()).execute();
     }
 
     public void addUser(Authentication authentication, String userID) throws Auth0Exception {
