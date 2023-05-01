@@ -1,21 +1,16 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.services;
 
-import com.auth0.client.HttpOptions;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.PageFilter;
 import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
-import com.auth0.json.auth.TokenHolder;
-import com.auth0.json.mgmt.Role;
+import com.auth0.json.mgmt.RolesPage;
 import com.auth0.json.mgmt.organizations.*;
 import com.auth0.json.mgmt.users.User;
-import com.auth0.net.TokenRequest;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.config.ApplicationProperties;
-import jdk.jshell.spi.ExecutionControl;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +33,17 @@ public class UserManagementService {
     @Value("${env.AUTH0_MANAGEMENT_CLIENT_SECRET}")
     public String clientSecret;
 
-    @Value("${env.AUTH0_MANAGEMENT_AUDIENCE}") public String audience;
+    @Value("${env.AUTH0_MANAGEMENT_AUDIENCE}")
+    public String audience;
     private AuthAPI authAPI;
 
     @Autowired
     public UserManagementService() {
 
     }
+
     // TODO: fix this
-    private ManagementAPI getApi() throws Auth0Exception{
+    private ManagementAPI getApi() throws Auth0Exception {
         if (null == authAPI) {
             authAPI = new AuthAPI(domain, clientID, clientSecret);
         }
@@ -62,6 +59,7 @@ public class UserManagementService {
 
         return api;
     }
+
     // TODO: consider returning different type to better encapsulate the use of auth0 and reduce coupling
     public List<User> getUsers() throws Auth0Exception {
         return getApi().users().list(new UserFilter()).execute().getItems();
@@ -84,7 +82,7 @@ public class UserManagementService {
         getApi().users().addRoles(id, role).execute();
     }
 
-    public List<Member> getMembers(Authentication authentication) throws Auth0Exception{
+    public List<Member> getMembers(Authentication authentication) throws Auth0Exception {
         final var api = getApi();
         final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
         return organizations.stream().flatMap(organization -> {
@@ -120,7 +118,6 @@ public class UserManagementService {
         }
 
 
-
     }
 
     public Organization createOrganization(Organization organization) throws Auth0Exception {
@@ -129,13 +126,14 @@ public class UserManagementService {
     }
 
     public Organization createOrganization(Organization organization, Authentication authentication) throws Auth0Exception {
-        final var result  = createOrganization(organization);
+        final var result = createOrganization(organization);
         getApi().organizations().addMembers(result.getId(), new Members(List.of(authentication.getName()))).execute();
         return result;
     }
 
     public OrganizationsPage getOrganizations(Authentication authentication) throws Auth0Exception {
         final var api = getApi();
+        System.out.println(authentication.getName());
         return api.users().getOrganizations(authentication.getName(), new PageFilter()).execute();
     }
 
@@ -148,6 +146,27 @@ public class UserManagementService {
 
     }
 
+    public void removeMember(Authentication authentication, String organizationID, String userID) throws Auth0Exception {
+        if (!getApi().users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems().stream()
+                .anyMatch(organization -> organization.getId().equals(organizationID))) {
+            throw new AccessDeniedException("The user is not a member of this organization.");
+            // TODO: check for role
+        }
+
+        removeMember(organizationID, userID);
+
+
+    }
+
+    public RolesPage getRoles(Authentication authentication, String organizationID, String userID) throws Auth0Exception {
+        final var api = getApi();
+
+        if (getOrganizations(authentication).getItems().stream().allMatch(organization -> !organization.getId().equals(organizationID))) {
+            throw new AccessDeniedException("The user is not a member of this organization.");
+        }
+
+        return api.organizations().getRoles(organizationID, userID, new PageFilter()).execute();
+    }
 //    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
 //        final var api = getApi();
 //        final var organizations = api.users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems();
