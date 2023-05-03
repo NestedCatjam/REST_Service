@@ -13,22 +13,22 @@ public class HitrustControl {
     private long id;
 
     @Column(name = "control_function")
-    private String control_function;
+    private String controlFunction;
 
     @Column(name = "control_category")
-    private String control_category;
+    private String controlCategory;
 
     @Column(name = "control_name")
-    private String control_name;
+    private String controlName;
 
     @Column(name = "control_description")
-    private String control_description;
+    private String controlDescription;
 
     @Column(name = "is_satisfied")
-    private boolean is_satisfied;
+    private boolean satisfied;
 
     @Column(name = "nist_mapping")
-    public String nist_mapping;
+    public String nistMapping;
 
     public HitrustControl() {
     }
@@ -40,10 +40,10 @@ public class HitrustControl {
 //        self.control_name = control_name
 //        self.control_description = control_description
     public HitrustControl(String control_function, String control_category, String control_name, String control_description, String nist_mapping) {
-        this.control_function = control_function;
-        this.control_category = control_category;
-        this.control_name = control_name;
-        this.control_description = control_description;
-        this.nist_mapping = nist_mapping;
+        this.controlFunction = control_function;
+        this.controlCategory = control_category;
+        this.controlName = control_name;
+        this.controlDescription = control_description;
+        this.nistMapping = nist_mapping;
     }
 }

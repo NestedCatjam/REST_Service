@@ -13,22 +13,22 @@ public class NistControl {
     private long id;
 
     @Column(name = "control_function")
-    private String control_function;
+    private String controlFunction;
 
     @Column(name = "control_category")
-    private String control_category;
+    private String controlCategory;
 
     @Column(name = "control_name")
-    private String control_name;
+    private String controlName;
 
     @Column(name = "control_description")
-    private String control_description;
+    private String controlDescription;
 
     @Column(name = "hitrust_mapping")
-    private String hitrust_mapping;
+    private String hitrustMapping;
 
     @Column(name = "is_satisfied")
-    private boolean is_satisfied;
+    private boolean satisfied;
 
 
     public NistControl() {
@@ -42,10 +42,10 @@ public class NistControl {
 //        self.hitrust_mapping = hitrust_mapping
 
     public NistControl(String control_function, String control_category, String control_name, String control_description, String hitrust_mapping) {
-        this.control_function = control_function;
-        this.control_category = control_category;
-        this.control_name = control_name;
-        this.control_description = control_description;
-        this.hitrust_mapping = hitrust_mapping;
+        this.controlFunction = control_function;
+        this.controlCategory = control_category;
+        this.controlName = control_name;
+        this.controlDescription = control_description;
+        this.hitrustMapping = hitrust_mapping;
     }
 }
