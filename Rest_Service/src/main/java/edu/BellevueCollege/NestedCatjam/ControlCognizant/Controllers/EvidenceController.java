@@ -1,10 +1,12 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Control;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.HitrustControl;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.Evidence;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.NistControl;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotFoundException;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.ControlRepository;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.HitrustRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.NistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,10 @@ public class EvidenceController {
     private EvidenceRepository evidenceRepository;
 
     @Autowired
-    private ControlRepository controlRepository;
+    private HitrustRepository hitrustRepository;
+
+    @Autowired
+    private NistRepository nistRepository;
 
     @GetMapping("/api/controls/{controlID}/evidence/")
     public List<Evidence> getEvidenceFor(@PathVariable("controlID") long controlID) {
@@ -33,10 +38,10 @@ public class EvidenceController {
     @PostMapping("/api/controls/{controlID}/evidence/")
     @Transactional
     public Evidence postEvidenceFor(@PathVariable("controlID") long controlID, Authentication authentication, @RequestBody Evidence evidence) {
-        Control control = controlRepository.findById(controlID).orElseThrow(() -> new EvidenceNotFoundException("Control with id " + controlID + " not found"));
+        NistControl nistControl = nistRepository.findById(controlID);
         final var contributorAuth0ID = authentication.getName();
         evidence.setContributorAuth0ID(contributorAuth0ID);
-        evidence.setImplemented(control);
+        evidence.setImplemented(nistControl);
         return evidenceRepository.save(evidence);
     }
 
