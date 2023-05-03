@@ -38,7 +38,7 @@ public class EvidenceController {
     @PostMapping("/api/controls/{controlID}/evidence/")
     @Transactional
     public Evidence postEvidenceFor(@PathVariable("controlID") long controlID, Authentication authentication, @RequestBody Evidence evidence) {
-        NistControl nistControl = nistRepository.findById(controlID).orElseThrow(() -> new EvidenceNotFoundException("Control with id " + controlID + " not found"));
+        NistControl nistControl = nistRepository.findById(controlID);
         final var contributorAuth0ID = authentication.getName();
         evidence.setContributorAuth0ID(contributorAuth0ID);
         evidence.setImplemented(nistControl);
