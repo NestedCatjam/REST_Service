@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface HitrustRepository extends JpaRepository<HitrustControl, Long> {
+    public HitrustControl findById(long id);
     public List<HitrustControl> findAllBySatisfied(boolean isSatisfied);
     public HitrustControl findHitrustControlByNistMapping(String hitrustMapping);
     public List<HitrustControl> findAllByControlCategory(String controlCategory);
