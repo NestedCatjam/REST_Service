@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Table(name = "evidence")
 public class Evidence {
     @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "evidence_id")
     private long id;
 
@@ -30,7 +30,7 @@ public class Evidence {
 
     @ManyToOne
     @JoinColumn(name = "implemented_control_id")
-    private Control implemented;
+    private NistControl implemented;
 
     @Column(name = "chat_id")
     private String chatid;
