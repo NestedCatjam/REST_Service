@@ -10,10 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
 @RequestMapping
+@Transactional
 public class ControlController {
     @Autowired
     public HitrustRepository hitrustRepository;
@@ -32,6 +34,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @PostMapping("/api/v1/hitrust_control")
     public ResponseEntity<HitrustControl> createHitrustControl(@RequestBody HitrustControl hitrustControl) {
         try {
@@ -42,7 +45,7 @@ public class ControlController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Transactional
     @PostMapping("/api/v1/nist_control")
     public ResponseEntity<NistControl> createNistControl(@RequestBody NistControl nistControl) {
         try {
@@ -54,6 +57,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/hitrust_control/{id}")
     public ResponseEntity<Object> getHitrustControl(@PathVariable long id) {
         try {
@@ -64,6 +68,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/hitrust_control/satisfied_requirements")
     public ResponseEntity<Object> getSatisfiedHitrustControls(Boolean satisfied) {
         try {
@@ -74,6 +79,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/hitrust_control/{nist_mapping}")
     public ResponseEntity<Object> getHitrustControlByNistMapping(@PathVariable String nist_mapping) {
         try {
@@ -84,6 +90,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/hitrust_control/{control_category}")
     public ResponseEntity<Object> getHitrustControlByControlCategory(@PathVariable String control_category) {
         try {
@@ -94,6 +101,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/hitrust_control/{control_function}")
     public ResponseEntity<Object> getHitrustControlByControlFunction(@PathVariable String control_function) {
         try {
@@ -105,6 +113,7 @@ public class ControlController {
     }
 
     // NIST ENDPOINTS
+    @Transactional
     @GetMapping("/api/v1/nist_control/satisfied_requirements")
     public ResponseEntity<Object> getSatisfiedNistControls(Boolean satisfied) {
         try {
@@ -115,6 +124,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/nist_control/{hitrust_mapping}")
     public ResponseEntity<Object> getNistControlByHitrustMapping(@PathVariable String hitrust_mapping) {
         try {
@@ -125,6 +135,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/nist_control/{control_category}")
     public ResponseEntity<Object> getNistControlByControlCategory(@PathVariable String control_category) {
         try {
@@ -135,6 +146,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/nist_control/{control_function}")
     public ResponseEntity<Object> getNistControlByControlFunction(@PathVariable String control_function) {
         try {
@@ -145,6 +157,7 @@ public class ControlController {
         }
     }
 
+    @Transactional
     @GetMapping("/api/v1/nist_control/{control_id}")
     public ResponseEntity<Object> getNistControlByControlId(@PathVariable long control_id) {
         try {
@@ -154,7 +167,7 @@ public class ControlController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Transactional
     @PostMapping("/api/v1/nist_control/confirm_nist_compliance")
     public ResponseEntity<Object> confirmNistCompliance(@RequestBody NistControl nistControl) {
         try {
