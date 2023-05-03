@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping
 public class ControlController {
@@ -153,5 +155,21 @@ public class ControlController {
         }
     }
 
+    @PostMapping("/api/v1/nist_control/confirm_nist_compliance")
+    public ResponseEntity<Object> confirmNistCompliance(@RequestBody NistControl nistControl) {
+        try {
+            nistControl.setSatisfied(true);
+            nistRepository.save(nistControl);
+            List<HitrustControl> controlList = hitrustRepository.findAllByNistMapping(nistControl.getHitrustMapping());
+            for (HitrustControl hitrustControl : controlList) {
+                hitrustControl.setSatisfied(true);
+                hitrustRepository.save(hitrustControl);
+            }
+            return new ResponseEntity<>(nistControl, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
