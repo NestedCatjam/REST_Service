@@ -5,7 +5,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "nist_controls")
-@Data
 public class NistControl {
     @Column(name = "control_id")
     @Id
@@ -47,5 +46,61 @@ public class NistControl {
         this.controlName = control_name;
         this.controlDescription = control_description;
         this.hitrustMapping = hitrust_mapping;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getControlFunction() {
+        return controlFunction;
+    }
+
+    public void setControlFunction(String controlFunction) {
+        this.controlFunction = controlFunction;
+    }
+
+    public String getControlCategory() {
+        return controlCategory;
+    }
+
+    public void setControlCategory(String controlCategory) {
+        this.controlCategory = controlCategory;
+    }
+
+    public String getControlName() {
+        return controlName;
+    }
+
+    public void setControlName(String controlName) {
+        this.controlName = controlName;
+    }
+
+    public String getControlDescription() {
+        return controlDescription;
+    }
+
+    public void setControlDescription(String controlDescription) {
+        this.controlDescription = controlDescription;
+    }
+
+    public String getHitrustMapping() {
+        return hitrustMapping;
+    }
+
+    public void setHitrustMapping(String hitrustMapping) {
+        this.hitrustMapping = hitrustMapping;
+    }
+
+    public boolean isSatisfied() {
+        return satisfied;
+    }
+
+    public void setSatisfied(boolean satisfied) {
+        this.satisfied = satisfied;
     }
 }
