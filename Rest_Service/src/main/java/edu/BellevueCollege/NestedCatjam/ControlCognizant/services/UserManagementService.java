@@ -146,6 +146,17 @@ public class UserManagementService {
 
     }
 
+    public Invitation invite(Authentication authentication, String organizationID, String email)  throws Auth0Exception {
+        final var api = getApi();
+        if (!getOrganizations(authentication).getItems().stream().anyMatch(organization -> organization.getId().equals(organizationID))) {
+            throw new AccessDeniedException("The user creating the invitation is not a member of this organization.");
+            // TODO: check for role
+        }
+
+        return api.organizations().createInvitation(organizationID, new Invitation(new Inviter(authentication.getName()), new Invitee(email), clientID)).execute();
+    }
+
+
     public void removeMember(Authentication authentication, String organizationID, String userID) throws Auth0Exception {
         if (!getApi().users().getOrganizations(authentication.getName(), new PageFilter()).execute().getItems().stream()
                 .anyMatch(organization -> organization.getId().equals(organizationID))) {

@@ -2,6 +2,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.mgmt.Role;
+import com.auth0.json.mgmt.organizations.Invitation;
 import com.auth0.json.mgmt.organizations.Member;
 import com.auth0.json.mgmt.organizations.Organization;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
@@ -34,6 +35,10 @@ public class OrganizationController {
     @PostMapping("/organizations/{organizationID}/members/")
     public void addMember(@PathVariable("organizationID") String organizationID, @RequestBody String userID) throws Auth0Exception {
         userManagementService.addMember(organizationID, userID);
+    }
+    @PostMapping("/organizations/{organizationID}/invitations/")
+    public Invitation invite(Authentication authentication, @PathVariable("organizationID") String organizationID, @RequestBody String email) throws Auth0Exception {
+        return userManagementService.invite(authentication, organizationID, email);
     }
 
     @DeleteMapping("/organizations/{organizationID}/members/{userID}")
