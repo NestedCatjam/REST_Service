@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -118,6 +119,46 @@ public class ControlController {
     public ResponseEntity<Object> getSatisfiedNistControls(Boolean satisfied) {
         try {
             return new ResponseEntity<>(nistRepository.findAllBySatisfied(satisfied), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    @GetMapping("/api/v1/nist_control/get_all_controls")
+    public ResponseEntity<Object> getAllNistControls() {
+        try {
+            ResponseEntity<Object> response = new ResponseEntity<>(nistRepository.findAll(), HttpStatus.OK);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    @GetMapping("/api/v1/hitrust_control/get_all_controls")
+    public ResponseEntity<Object> getAllHitrustControls() {
+        try {
+            ResponseEntity<Object> response = new ResponseEntity<>(hitrustRepository.findAll(), HttpStatus.OK);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    @GetMapping("/api/v1/control/get_all_controls")
+    public ResponseEntity<Object> getAllControls() {
+        try {
+            ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.OK);
+            List<Object> allControls = new ArrayList<>();
+            allControls.addAll(hitrustRepository.findAll());
+            allControls.addAll(nistRepository.findAll());
+            response.getBody().equals(allControls);
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
