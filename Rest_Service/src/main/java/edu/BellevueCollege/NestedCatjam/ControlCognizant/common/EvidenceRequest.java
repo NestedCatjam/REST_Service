@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class EvidenceRequest {
     public long evidenceId;
-    public long organizationId;
+    public String organizationId;
 }
