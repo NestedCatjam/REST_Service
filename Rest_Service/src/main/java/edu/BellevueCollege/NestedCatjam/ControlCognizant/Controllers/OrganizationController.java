@@ -27,6 +27,13 @@ public class OrganizationController {
         return userManagementService.getOrganizations(authentication).getItems();
     }
 
+
+    @GetMapping("/organizations/{id}")
+    public Organization getOrganization(Authentication authentication, @PathVariable("id") String id) throws Auth0Exception {
+        return userManagementService.getOrganization(authentication, id);
+    }
+
+
     @GetMapping("/organizations/{id}/members/")
     public List<Member> getMembers(@PathVariable("id") String id) throws Auth0Exception {
         return userManagementService.getMembers(id);

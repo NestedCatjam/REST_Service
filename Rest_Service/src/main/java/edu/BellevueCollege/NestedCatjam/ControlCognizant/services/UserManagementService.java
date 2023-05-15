@@ -30,6 +30,9 @@ public class UserManagementService {
     @Value("${env.AUTH0_MANAGEMENT_CLIENT_ID}")
     public String clientID;
 
+    @Value("${env.AUTH0_CLIENT_ID}")
+    public String invitationClientID;
+
     @Value("${env.AUTH0_MANAGEMENT_CLIENT_SECRET}")
     public String clientSecret;
 
@@ -153,7 +156,7 @@ public class UserManagementService {
             // TODO: check for role
         }
 
-        return api.organizations().createInvitation(organizationID, new Invitation(new Inviter(authentication.getName()), new Invitee(email), clientID)).execute();
+        return api.organizations().createInvitation(organizationID, new Invitation(new Inviter(authentication.getName()), new Invitee(email), invitationClientID)).execute();
     }
 
 
@@ -177,6 +180,15 @@ public class UserManagementService {
         }
 
         return api.organizations().getRoles(organizationID, userID, new PageFilter()).execute();
+    }
+
+    public Organization getOrganization(Authentication authentication, String id) throws Auth0Exception {
+
+
+        return getOrganizations(authentication).getItems().stream()
+                .filter(organization -> organization.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new AccessDeniedException("The user is not a member of this organization"));
     }
 //    public Member getMember(Authentication authentication, String userID) throws Auth0Exception {
 //        final var api = getApi();
