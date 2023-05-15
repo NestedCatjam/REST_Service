@@ -40,7 +40,7 @@ public class Evidence {
     }
 
     public Evidence(String name, String description, String type, String base64,
-                    String contributorAuth0ID, long nistControlId, String chatid, long organizationID) {
+                    String contributorAuth0ID, long nistControlId, String chatid, String organizationID) {
         this.name = name;
         this.description = description;
         this.type = type;
@@ -115,11 +115,11 @@ public class Evidence {
         this.chatid = chatid;
     }
 
-    public long getOrganizationID() {
+    public String getOrganizationID() {
         return organizationID;
     }
 
-    public void setOrganizationID(long organizationID) {
+    public void setOrganizationID(String organizationID) {
         this.organizationID = organizationID;
     }
 }
