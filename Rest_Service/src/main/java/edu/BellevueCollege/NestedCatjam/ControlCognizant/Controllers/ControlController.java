@@ -244,4 +244,59 @@ public class ControlController {
         }
     }
 
+    @Transactional
+    @GetMapping("/api/v1/functions")
+    public ResponseEntity<Object> getFunctions() {
+        try {
+            List<Object> controls = new ArrayList<>();
+            controls.addAll(hitrustRepository.findAll());
+            controls.addAll(nistRepository.findAll());
+            List<String> functions = new ArrayList<>();
+            for (Object control : controls) {
+                if (control instanceof HitrustControl) {
+                    HitrustControl hitrustControl = (HitrustControl) control;
+                    if (!functions.contains(hitrustControl.getControlFunction())) {
+                        functions.add(hitrustControl.getControlFunction());
+                    }
+                } else if (control instanceof NistControl) {
+                    NistControl nistControl = (NistControl) control;
+                    if (!functions.contains(nistControl.getControlFunction())) {
+                        functions.add(nistControl.getControlFunction());
+                    }
+                }
+            }
+            return new ResponseEntity<>(functions, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    @GetMapping("/api/v1/categories")
+    public ResponseEntity<Object> getCategories() {
+        try {
+            List<Object> controls = new ArrayList<>();
+            controls.addAll(hitrustRepository.findAll());
+            controls.addAll(nistRepository.findAll());
+            List<String> categories = new ArrayList<>();
+            for (Object control : controls) {
+                if (control instanceof HitrustControl) {
+                    HitrustControl hitrustControl = (HitrustControl) control;
+                    if (!categories.contains(hitrustControl.getControlCategory())) {
+                        categories.add(hitrustControl.getControlCategory());
+                    }
+                } else if (control instanceof NistControl) {
+                    NistControl nistControl = (NistControl) control;
+                    if (!categories.contains(nistControl.getControlCategory())) {
+                        categories.add(nistControl.getControlCategory());
+                    }
+                }
+            }
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
