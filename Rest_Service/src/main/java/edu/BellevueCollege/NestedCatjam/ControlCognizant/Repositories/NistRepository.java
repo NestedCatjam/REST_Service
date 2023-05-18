@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface NistRepository extends JpaRepository<NistControl, Long> {
-    public NistControl findById(long id);
-    public List<NistControl> findAllBySatisfied(boolean isSatisfied);
-    public List<NistControl> findAllByHitrustMapping(String hitrustMapping);
-    public List<NistControl> findAllByControlCategory(String controlCategory);
-    public List<NistControl> findAllByControlFunction(String controlFunction);
+    NistControl findById(long id);
+    List<NistControl> findAllBySatisfied(boolean isSatisfied);
+    List<NistControl> findAllByHitrustMapping(String hitrustMapping);
+    List<NistControl> findAllByControlCategory(String controlCategory);
+    List<NistControl> findAllByControlFunction(String controlFunction);
 }
