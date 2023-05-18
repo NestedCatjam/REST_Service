@@ -2,7 +2,6 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Controllers;
 
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.HitrustControl;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities.NistControl;
-import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.ControlNotFoundException;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.HitrustRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.NistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class ControlController {
     private NistRepository nistRepository;
 
     @Transactional
-    @PostMapping("/api/v1/hitrust_control")
+    @PostMapping("/api/v1/hitrust_control/create")
     public ResponseEntity<HitrustControl> createHitrustControl(@RequestBody HitrustControl control) {
         try {
             HitrustControl savedHitrustControl = hitrustRepository.save(control);
@@ -36,7 +35,7 @@ public class ControlController {
         }
     }
     @Transactional
-    @PostMapping("/api/v1/nist_control")
+    @PostMapping("/api/v1/nist_control/create")
     public ResponseEntity<NistControl> createNistControl(@RequestBody NistControl control) {
         try {
                 NistControl savedNistControl = nistRepository.save(control);
@@ -48,8 +47,8 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/hitrust_control/{id}")
-    public ResponseEntity<Object> getHitrustControl(@PathVariable long id) {
+    @GetMapping("/api/v1/hitrust_control/get_one/{id}")
+    public ResponseEntity<Object> getHitrustControlById(@PathVariable long id) {
         try {
             return new ResponseEntity<>(hitrustRepository.findById(id), HttpStatus.OK);
         } catch (Exception e) {
@@ -70,10 +69,10 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/hitrust_control/{nist_mapping}")
-    public ResponseEntity<Object> getHitrustControlByNistMapping(@PathVariable String nist_mapping) {
+    @GetMapping("/api/v1/hitrust_control/mapping/{nist_mapping}")
+    public ResponseEntity<Object> getHitrustControlsByNistMapping(@PathVariable String nist_mapping) {
         try {
-            return new ResponseEntity<>(hitrustRepository.findHitrustControlByNistMapping(nist_mapping), HttpStatus.OK);
+            return new ResponseEntity<>(hitrustRepository.findAllByNistMapping(nist_mapping), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,7 +80,7 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/hitrust_control/{control_category}")
+    @GetMapping("/api/v1/hitrust_control/category/{control_category}")
     public ResponseEntity<Object> getHitrustControlByControlCategory(@PathVariable String control_category) {
         try {
             return new ResponseEntity<>(hitrustRepository.findAllByControlCategory(control_category), HttpStatus.OK);
@@ -92,7 +91,7 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/hitrust_control/{control_function}")
+    @GetMapping("/api/v1/hitrust_control/function/{control_function}")
     public ResponseEntity<Object> getHitrustControlByControlFunction(@PathVariable String control_function) {
         try {
             return new ResponseEntity<>(hitrustRepository.findAllByControlFunction(control_function), HttpStatus.OK);
@@ -183,10 +182,10 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/nist_control/{hitrust_mapping}")
+    @GetMapping("/api/v1/nist_control/mapping/{hitrust_mapping}")
     public ResponseEntity<Object> getNistControlByHitrustMapping(@PathVariable String hitrust_mapping) {
         try {
-            return new ResponseEntity<>(nistRepository.findNistControlByHitrustMapping(hitrust_mapping), HttpStatus.OK);
+            return new ResponseEntity<>(nistRepository.findAllByHitrustMapping(hitrust_mapping), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -194,7 +193,7 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/nist_control/{control_category}")
+    @GetMapping("/api/v1/nist_control/by_category/{control_category}")
     public ResponseEntity<Object> getNistControlByControlCategory(@PathVariable String control_category) {
         try {
             return new ResponseEntity<>(nistRepository.findAllByControlCategory(control_category), HttpStatus.OK);
@@ -205,7 +204,7 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/nist_control/{control_function}")
+    @GetMapping("/api/v1/nist_control/by_function/{control_function}")
     public ResponseEntity<Object> getNistControlByControlFunction(@PathVariable String control_function) {
         try {
             return new ResponseEntity<>(nistRepository.findAllByControlFunction(control_function), HttpStatus.OK);
@@ -216,7 +215,7 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/nist_control/{control_id}")
+    @GetMapping("/api/v1/nist_control/get/{control_id}")
     public ResponseEntity<Object> getNistControlByControlId(@PathVariable long control_id) {
         try {
             return new ResponseEntity<>(nistRepository.findById(control_id), HttpStatus.OK);

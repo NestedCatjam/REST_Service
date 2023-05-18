@@ -10,7 +10,7 @@ import java.util.List;
 public interface NistRepository extends JpaRepository<NistControl, Long> {
     public NistControl findById(long id);
     public List<NistControl> findAllBySatisfied(boolean isSatisfied);
-    public NistControl findNistControlByHitrustMapping(String hitrustMapping);
+    public List<NistControl> findAllByHitrustMapping(String hitrustMapping);
     public List<NistControl> findAllByControlCategory(String controlCategory);
     public List<NistControl> findAllByControlFunction(String controlFunction);
 }

@@ -8,8 +8,7 @@ import java.util.List;
 public interface HitrustRepository extends JpaRepository<HitrustControl, Long> {
     HitrustControl findById(long id);
     List<HitrustControl> findAllBySatisfied(boolean isSatisfied);
-    HitrustControl findHitrustControlByNistMapping(String hitrustMapping);
+    List<HitrustControl> findAllByNistMapping(String hitrustMapping);
     List<HitrustControl> findAllByControlCategory(String controlCategory);
     List<HitrustControl> findAllByControlFunction(String controlFunction);
-    List<HitrustControl> findAllByNistMapping(String nistMapping);
 }
