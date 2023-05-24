@@ -10,8 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping
@@ -38,7 +37,7 @@ public class ControlController {
     @PostMapping("/api/v1/nist_control/create")
     public ResponseEntity<NistControl> createNistControl(@RequestBody NistControl control) {
         try {
-                NistControl savedNistControl = nistRepository.save(control);
+            NistControl savedNistControl = nistRepository.save(control);
             return new ResponseEntity<>(savedNistControl, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,10 +68,12 @@ public class ControlController {
     }
 
     @Transactional
-    @GetMapping("/api/v1/hitrust_control/mapping/{nist_mapping}")
-    public ResponseEntity<Object> getHitrustControlsByNistMapping(@PathVariable String nist_mapping) {
+    @GetMapping("/api/v1/hitrust_control/mapping/{nistName}")
+    public ResponseEntity<Object> getHitrustControlsByNistMapping(@PathVariable String nistName) {
         try {
-            return new ResponseEntity<>(hitrustRepository.findAllByNistMapping(nist_mapping), HttpStatus.OK);
+            NistControl nist = nistRepository.findByControlName(nistName);
+            Set<HitrustControl> mappings = nist.getHitrustControls();
+            return new ResponseEntity<>(mappings, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -185,7 +186,9 @@ public class ControlController {
     @GetMapping("/api/v1/nist_control/mapping/{hitrust_mapping}")
     public ResponseEntity<Object> getNistControlByHitrustMapping(@PathVariable String hitrust_mapping) {
         try {
-            return new ResponseEntity<>(nistRepository.findAllByHitrustMapping(hitrust_mapping), HttpStatus.OK);
+            HitrustControl hitrust = hitrustRepository.findByControlName(hitrust_mapping);
+            Set<NistControl> mappings = hitrust.getNistControls();
+            return new ResponseEntity<>(mappings, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -231,8 +234,7 @@ public class ControlController {
             NistControl  control = nistRepository.findById(nistControl);
             control.setSatisfied(true);
             nistRepository.save(control);
-            List<HitrustControl> controlList = hitrustRepository.findAllByNistMapping(control.getControlName());
-            for (HitrustControl hitrustControl : controlList) {
+            for (HitrustControl hitrustControl : control.getHitrustControls()) {
                 hitrustControl.setSatisfied(true);
                 hitrustRepository.save(hitrustControl);
             }
@@ -296,6 +298,83 @@ public class ControlController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    @PutMapping("/api/v1/hitrust_control/update/{id}")
+    public ResponseEntity<HitrustControl> updateHitrustControl(@PathVariable("id") long id, @RequestBody Map<String, Object> payload) {
+        try {
+            // Retrieve the existing HitrustControl entity by its ID
+            Optional<HitrustControl> optionalHitrustControl = Optional.ofNullable(hitrustRepository.findById(id));
+            if (optionalHitrustControl.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Update the properties of the HitrustControl entity
+            HitrustControl existingHitrustControl = optionalHitrustControl.get();
+            existingHitrustControl.setControlFunction((String) payload.get("controlFunction"));
+            existingHitrustControl.setControlCategory((String) payload.get("controlCategory"));
+            existingHitrustControl.setControlName((String) payload.get("controlName"));
+            existingHitrustControl.setControlDescription((String) payload.get("controlDescription"));
+
+            // Update the mappings
+            List<String> nistMappings = (List<String>) payload.get("nistMappings");
+            Set<NistControl> nistControls = new HashSet<>();
+            for (String mapping : nistMappings) {
+                NistControl nistControl = nistRepository.findByControlName(mapping);
+                if (nistControl != null) {
+                    nistControls.add(nistControl);
+                }
+            }
+            existingHitrustControl.setNistControls(nistControls);
+
+            // Save the updated HitrustControl entity
+            HitrustControl updatedHitrustControl = hitrustRepository.save(existingHitrustControl);
+
+            return ResponseEntity.ok(updatedHitrustControl);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @Transactional
+    @PutMapping("/api/v1/nist_control/update/{id}")
+    public ResponseEntity<NistControl> updateNistControl(@PathVariable("id") long id, @RequestBody Map<String, Object> payload) {
+        try {
+            // Retrieve the existing NistControl entity by its ID
+            Optional<NistControl> optionalNistControl = Optional.ofNullable(nistRepository.findById(id));
+            if (optionalNistControl.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Update the properties of the NistControl entity
+            NistControl existingNistControl = optionalNistControl.get();
+            existingNistControl.setControlFunction((String) payload.get("controlFunction"));
+            existingNistControl.setControlCategory((String) payload.get("controlCategory"));
+            existingNistControl.setControlName((String) payload.get("controlName"));
+            existingNistControl.setControlDescription((String) payload.get("controlDescription"));
+
+            // Update the mappings
+            List<String> hitrustMappings = (List<String>) payload.get("hitrustMappings");
+            Set<HitrustControl> hitrustControls = new HashSet<>();
+            for (String mapping : hitrustMappings) {
+                HitrustControl hitrustControl = hitrustRepository.findByControlName(mapping);
+                if (hitrustControl != null) {
+                    hitrustControls.add(hitrustControl);
+                }
+            }
+            existingNistControl.setHitrustControls(hitrustControls);
+
+            // Save the updated NistControl entity
+            NistControl updatedNistControl = nistRepository.save(existingNistControl);
+
+            return ResponseEntity.ok(updatedNistControl);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
