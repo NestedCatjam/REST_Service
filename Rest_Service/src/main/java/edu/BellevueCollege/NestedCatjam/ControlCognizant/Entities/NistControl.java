@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "nist_controls")
@@ -12,7 +14,7 @@ public class NistControl {
     public NistControl() {
     }
 
-    @Column(name = "control_id")
+    @Column(name = "nist_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,20 +35,31 @@ public class NistControl {
     @NonNull
     private String controlDescription;
 
-    @Column(name = "hitrust_mapping")
-    @NonNull
-    private String hitrustMapping;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "mappings",
+            joinColumns = @JoinColumn(name = "nist_control_id"),
+            inverseJoinColumns = @JoinColumn(name = "hitrust_control_id")
+    )
+    private Set<HitrustControl> hitrustControls = new HashSet<>();
 
     @Column(name = "is_satisfied")
     private boolean satisfied;
 
-//    # def __init__(self, control_function, control_category, control_name, control_description, hitrust_mapping):
-    public NistControl(String controlFunction, String controlCategory, String controlName, String controlDescription, String hitrustMapping) {
+    public NistControl(String controlFunction, String controlCategory, String controlName, String controlDescription) {
         this.controlFunction = controlFunction;
         this.controlCategory = controlCategory;
         this.controlName = controlName;
         this.controlDescription = controlDescription;
-        this.hitrustMapping = hitrustMapping;
         this.satisfied = false;
+    }
+
+    public NistControl(String controlFunction, String controlCategory, String controlName, String controlDescription, Set<HitrustControl> hitrustMappings) {
+        this.controlFunction = controlFunction;
+        this.controlCategory = controlCategory;
+        this.controlName = controlName;
+        this.controlDescription = controlDescription;
+        this.satisfied = false;
+        this.hitrustControls = hitrustMappings;
     }
 }

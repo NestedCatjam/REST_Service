@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "evidence")
+@Data
 public class Evidence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,78 +49,6 @@ public class Evidence {
         this.contributorAuth0ID = contributorAuth0ID;
         this.nistControlId = nistControlId;
         this.chatid = chatid;
-        this.organizationID = organizationID;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getBase64() {
-        return base64;
-    }
-
-    public void setBase64(String base64) {
-        this.base64 = base64;
-    }
-
-    public String getContributorAuth0ID() {
-        return contributorAuth0ID;
-    }
-
-    public void setContributorAuth0ID(String contributorAuth0ID) {
-        this.contributorAuth0ID = contributorAuth0ID;
-    }
-
-    public long getNistControlId() {
-        return nistControlId;
-    }
-
-    public void setNistControlId(long nistControlId) {
-        this.nistControlId = nistControlId;
-    }
-
-    public String getChatid() {
-        return chatid;
-    }
-
-    public void setChatid(String chatid) {
-        this.chatid = chatid;
-    }
-
-    public long getOrganizationID() {
-        return organizationID;
-    }
-
-    public void setOrganizationID(long organizationID) {
         this.organizationID = organizationID;
     }
 }

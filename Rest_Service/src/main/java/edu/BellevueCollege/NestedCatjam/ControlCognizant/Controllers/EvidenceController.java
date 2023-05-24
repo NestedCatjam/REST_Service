@@ -15,7 +15,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@Transactional
 public class EvidenceController {
     @Autowired
     private EvidenceRepository evidenceRepository;
