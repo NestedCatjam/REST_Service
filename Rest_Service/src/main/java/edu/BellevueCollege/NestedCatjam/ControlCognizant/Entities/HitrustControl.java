@@ -1,8 +1,10 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.NistRepository;
 import lombok.Data;
 import lombok.NonNull;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -38,6 +40,8 @@ public class HitrustControl {
     private boolean satisfied;
 
     @ManyToMany(mappedBy = "hitrustControls")
+    @JsonIgnore
+    @HashCodeExclude
     private Set<NistControl> nistControls = new HashSet<>();
 
     public HitrustControl(String controlFunction, String controlCategory, String controlName, String controlDescription) {

@@ -198,12 +198,12 @@ public class ControlController {
     @Transactional
     @GetMapping("/api/v1/nist_control/by_category/{control_category}")
     public ResponseEntity<Object> getNistControlByControlCategory(@PathVariable String control_category) {
-        try {
-            return new ResponseEntity<>(nistRepository.findAllByControlCategory(control_category), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        final var list =
+                nistRepository.findAll().stream()
+                        .filter(nistControl -> nistControl.getControlCategory().equals(control_category))
+                        .map(nistControl -> Map.of("id", nistControl.getId(), "controlName", nistControl.getControlName(), "controlDescription", nistControl.getControlDescription()))
+                        .toList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @Transactional

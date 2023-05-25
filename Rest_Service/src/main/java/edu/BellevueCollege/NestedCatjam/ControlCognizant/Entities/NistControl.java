@@ -1,7 +1,9 @@
 package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NonNull;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -41,6 +43,7 @@ public class NistControl {
             joinColumns = @JoinColumn(name = "nist_control_id"),
             inverseJoinColumns = @JoinColumn(name = "hitrust_control_id")
     )
+
     private Set<HitrustControl> hitrustControls = new HashSet<>();
 
     @Column(name = "is_satisfied")

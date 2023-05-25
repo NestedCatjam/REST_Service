@@ -12,6 +12,6 @@ public interface NistRepository extends JpaRepository<NistControl, Long> {
     NistControl findById(long id);
     NistControl findByControlName(String controlName);
     Set<NistControl> findAllBySatisfied(boolean isSatisfied);
-    Set<NistControl> findAllByControlCategory(String controlCategory);
+    List<NistControl> findAllByControlCategory(String controlCategory);
     Set<NistControl> findAllByControlFunction(String controlFunction);
 }
