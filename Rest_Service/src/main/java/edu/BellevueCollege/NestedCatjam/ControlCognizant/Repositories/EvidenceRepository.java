@@ -8,4 +8,5 @@ import java.util.List;
 public interface EvidenceRepository extends JpaRepository<Evidence, Long> {
     Evidence findByIdAndOrganizationID(long evidenceId, String orgId);
     List<Evidence> findAllByOrganizationID(String orgId);
+    List<Evidence> findAllByOrganizationIDAndNistControlId(String organizationID, long controlID);
 }

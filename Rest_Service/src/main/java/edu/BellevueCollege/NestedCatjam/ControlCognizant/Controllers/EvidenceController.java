@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -25,6 +22,12 @@ public class EvidenceController {
 
 
     @Autowired private UserManagementService userManagementService;
+
+    @Transactional
+    @GetMapping("/organization/{organizationID}/nist_control/get/{controlID}/evidence")
+    public List<Evidence> getEvidenceForBy(@PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID) {
+        return evidenceRepository.findAllByOrganizationIDAndNistControlId(organizationID, controlID);
+    }
 
     @Transactional
     @GetMapping("/api/v1/evidence/get")
