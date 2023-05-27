@@ -6,13 +6,16 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotF
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.common.EvidenceRequest;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
@@ -30,12 +33,30 @@ public class EvidenceController {
     @GetMapping(value = "/organizations/{organizationID}/nist_control/get/{controlID}/evidence", produces = "application/json")
     public List<Evidence> getEvidenceForBy(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID) throws Auth0Exception {
         if (notInOrganization(authentication, organizationID)) {
-            throw new AccessDeniedException("The user is not in the organization that they are trying to post evidence on behalf of.");
+            throw new AccessDeniedException("The user is not in the organization that they are trying to get evidence for.");
             // TODO: check for role
         }
         return evidenceRepository.findAllByOrganizationIDAndNistControlId(organizationID, controlID);
     }
-    
+
+    @Transactional
+    @PostMapping("/organizations/{organizationID}/nist_control/get/{controlID}/evidence")
+    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID, @RequestBody MultipartFile file) throws Auth0Exception, IOException {
+        if (notInOrganization(authentication, organizationID)) {
+            throw new AccessDeniedException("The user is not in the organization that they are trying to post evidence on behalf of.");
+            // TODO: check for role
+        }
+
+        var evidence = new Evidence();
+        evidence.setNistControlId(controlID); evidence.setOrganizationID(organizationID);
+        evidence.setContributorAuth0ID(authentication.getName());
+        evidence.setDescription(file.getResource().getDescription());
+        evidence.setName(file.getName());
+        evidence.setType(file.getContentType());
+        evidence.setBase64(Base64.encodeBase64String(file.getBytes()));
+        evidence = evidenceRepository.save(evidence);
+        return evidence;
+    }
 
     @Transactional
     @GetMapping("/api/v1/evidence/get")
