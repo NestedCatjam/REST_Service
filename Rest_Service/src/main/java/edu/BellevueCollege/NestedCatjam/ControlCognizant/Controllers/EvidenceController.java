@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
+
+
 @RestController
 public class EvidenceController {
     @Autowired
@@ -24,10 +27,15 @@ public class EvidenceController {
     @Autowired private UserManagementService userManagementService;
 
     @Transactional
-    @GetMapping("/organization/{organizationID}/nist_control/get/{controlID}/evidence")
-    public List<Evidence> getEvidenceForBy(@PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID) {
+    @GetMapping(value = "/organizations/{organizationID}/nist_control/get/{controlID}/evidence", produces = "application/json")
+    public List<Evidence> getEvidenceForBy(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID) throws Auth0Exception {
+        if (notInOrganization(authentication, organizationID)) {
+            throw new AccessDeniedException("The user is not in the organization that they are trying to post evidence on behalf of.");
+            // TODO: check for role
+        }
         return evidenceRepository.findAllByOrganizationIDAndNistControlId(organizationID, controlID);
     }
+    
 
     @Transactional
     @GetMapping("/api/v1/evidence/get")
