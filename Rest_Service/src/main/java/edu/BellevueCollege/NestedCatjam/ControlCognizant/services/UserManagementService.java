@@ -3,8 +3,11 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.services;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.PageFilter;
+import com.auth0.client.mgmt.filter.RolesFilter;
 import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
+import com.auth0.json.mgmt.Permission;
+import com.auth0.json.mgmt.Role;
 import com.auth0.json.mgmt.RolesPage;
 import com.auth0.json.mgmt.organizations.*;
 import com.auth0.json.mgmt.users.User;
@@ -119,18 +122,43 @@ public class UserManagementService {
         for (final var organization : organizations) {
             api.organizations().addRoles(organization.getId(), userID, roles).execute();
         }
-
-
     }
-
-    public Organization createOrganization(Organization organization) throws Auth0Exception {
+    // TODO: break logic that user has permission into separate function later
+    //admin assigning role to existing member in the organization
+    public void assignRole(Authentication authentication, String organizationID,
+                           String userID, Roles roles) throws Auth0Exception {
+        //check whether user is signed in making requests to API is in org
+        final var admin = authentication.getName();
+        verifyInOrganization(authentication, organizationID);
+        //verify role: user must be admin within the org
         final var api = getApi();
-        return api.organizations().create(organization).execute();
+        //get roles for potential admin
+
+        boolean userVerified = false;
+        for (final var role : getRoles(authentication, organizationID,
+                authentication.getName()).getItems()){
+            //if at least one of the roles has the permission, continue, else throw exception
+
+            boolean hasPermission = api.roles().listPermissions(role.getId(), new PageFilter())
+                    .execute().getItems().stream().anyMatch(permission ->
+                            permission.getName().equals("assign_role:users"));
+            if (hasPermission){
+                userVerified = true;
+                break;
+            }
+        }
+        if (!userVerified){
+            throw new AccessDeniedException("User cannot assign roles");
+        }
+        //add the roles to the specified user
+        api.organizations().addRoles(organizationID, userID, roles).execute();
     }
 
     public Organization createOrganization(Organization organization, Authentication authentication) throws Auth0Exception {
-        final var result = createOrganization(organization);
+        final var api = getApi();
+        final var result = api.organizations().create(organization).execute();
         getApi().organizations().addMembers(result.getId(), new Members(List.of(authentication.getName()))).execute();
+        //add user as admin
         return result;
     }
 
@@ -149,14 +177,20 @@ public class UserManagementService {
 
     }
 
+
+
     public Invitation invite(Authentication authentication, String organizationID, String email)  throws Auth0Exception {
         final var api = getApi();
+        verifyInOrganization(authentication, organizationID);
+
+        return api.organizations().createInvitation(organizationID, new Invitation(new Inviter(authentication.getName()), new Invitee(email), invitationClientID)).execute();
+    }
+
+    private void verifyInOrganization(Authentication authentication, String organizationID) throws Auth0Exception {
         if (!getOrganizations(authentication).getItems().stream().anyMatch(organization -> organization.getId().equals(organizationID))) {
             throw new AccessDeniedException("The user creating the invitation is not a member of this organization.");
             // TODO: check for role
         }
-
-        return api.organizations().createInvitation(organizationID, new Invitation(new Inviter(authentication.getName()), new Invitee(email), invitationClientID)).execute();
     }
 
 
