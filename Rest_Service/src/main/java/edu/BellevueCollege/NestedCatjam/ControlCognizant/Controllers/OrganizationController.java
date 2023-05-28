@@ -5,6 +5,7 @@ import com.auth0.json.mgmt.Role;
 import com.auth0.json.mgmt.organizations.Invitation;
 import com.auth0.json.mgmt.organizations.Member;
 import com.auth0.json.mgmt.organizations.Organization;
+import com.auth0.json.mgmt.organizations.Roles;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -44,22 +45,39 @@ public class OrganizationController {
         userManagementService.addMember(organizationID, userID);
     }
     @PostMapping("/organizations/{organizationID}/invitations/")
-    public Invitation invite(Authentication authentication, @PathVariable("organizationID") String organizationID, @RequestBody String email) throws Auth0Exception {
+    public Invitation invite(Authentication authentication, @PathVariable("organizationID")
+    String organizationID, @RequestBody String email) throws Auth0Exception {
         return userManagementService.invite(authentication, organizationID, email);
     }
 
     @DeleteMapping("/organizations/{organizationID}/members/{userID}")
-    public void removeMember(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("userID") String userID) throws Auth0Exception {
+    public void removeMember(Authentication authentication, @PathVariable("organizationID")
+    String organizationID, @PathVariable("userID") String userID) throws Auth0Exception {
         userManagementService.removeMember(authentication, organizationID, userID);
     }
 
     @GetMapping("/organizations/{organizationID}/members/me/roles")
-    public List<Role> getMyRolesIn(Authentication authentication, @PathVariable("organizationID") String organizationID) throws Auth0Exception {
+    public List<Role> getMyRolesIn(Authentication authentication, @PathVariable("organizationID")
+    String organizationID) throws Auth0Exception {
         return getRoles(authentication, organizationID, authentication.getName());
     }
 
     @GetMapping("/organizations/{organizationID}/members/{userID}/roles")
-    public List<Role> getRoles(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("userID") String userID) throws Auth0Exception {
+    public List<Role> getRoles(Authentication authentication, @PathVariable("organizationID")
+    String organizationID, @PathVariable("userID") String userID) throws Auth0Exception {
         return userManagementService.getRoles(authentication, organizationID, userID).getItems();
+    }
+
+    /**
+     * @param authentication
+     * @param organizationID
+     * @param userID
+     * @param roles: list of Auth0 role IDs
+     * @throws Auth0Exception
+     */
+    @PostMapping("/organizations/{organizationID}/members/{userID}/roles")
+    public void addRoles(Authentication authentication, @PathVariable("organizationID")
+    String organizationID, @PathVariable("userID") String userID, @RequestBody List<String> roles) throws Auth0Exception {
+        userManagementService.assignRole(authentication, organizationID, userID, new Roles(roles));
     }
 }
