@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskLabel": "task-ControlCognizantApplication",
+      "appliesTo": "Rest_Service/src/main/java/edu/BellevueCollege/NestedCatjam/ControlCognizant/ControlCognizantApplication.java",
+      "type": "launch"
+    }
+  ]
+}
