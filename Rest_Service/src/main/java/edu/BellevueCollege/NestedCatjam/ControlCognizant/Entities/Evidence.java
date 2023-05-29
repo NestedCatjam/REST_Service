@@ -3,6 +3,7 @@ package edu.BellevueCollege.NestedCatjam.ControlCognizant.Entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "evidence")
@@ -11,7 +12,7 @@ public class Evidence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "evidence_id")
-    private long id;
+    private Long id;
 
     @Column(name = "evidence_name")
     private String name;

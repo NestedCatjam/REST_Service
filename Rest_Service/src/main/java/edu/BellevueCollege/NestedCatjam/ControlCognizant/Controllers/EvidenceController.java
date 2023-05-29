@@ -39,21 +39,23 @@ public class EvidenceController {
         return evidenceRepository.findAllByOrganizationIDAndNistControlId(organizationID, controlID);
     }
 
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     @PostMapping("/organizations/{organizationID}/nist_control/get/{controlID}/evidence")
-    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID, @RequestBody MultipartFile file) throws Auth0Exception, IOException {
+    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID, @RequestPart("file") MultipartFile file) throws Auth0Exception, IOException {
         if (notInOrganization(authentication, organizationID)) {
             throw new AccessDeniedException("The user is not in the organization that they are trying to post evidence on behalf of.");
             // TODO: check for role
         }
 
         var evidence = new Evidence();
-        evidence.setNistControlId(controlID); evidence.setOrganizationID(organizationID);
+        evidence.setNistControlId(controlID);
+        evidence.setOrganizationID(organizationID);
         evidence.setContributorAuth0ID(authentication.getName());
         evidence.setDescription(file.getResource().getDescription());
         evidence.setName(file.getName());
         evidence.setType(file.getContentType());
         evidence.setBase64(Base64.encodeBase64String(file.getBytes()));
+
         evidence = evidenceRepository.save(evidence);
         return evidence;
     }
