@@ -6,6 +6,7 @@ import edu.BellevueCollege.NestedCatjam.ControlCognizant.Exceptions.EvidenceNotF
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.Repositories.EvidenceRepository;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.common.EvidenceRequest;
 import edu.BellevueCollege.NestedCatjam.ControlCognizant.services.UserManagementService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
@@ -27,7 +32,11 @@ public class EvidenceController {
     private EvidenceRepository evidenceRepository;
 
 
+
+
     @Autowired private UserManagementService userManagementService;
+
+
 
     @Transactional
     @GetMapping(value = "/organizations/{organizationID}/nist_control/get/{controlID}/evidence", produces = "application/json")
@@ -41,7 +50,7 @@ public class EvidenceController {
 
     @org.springframework.transaction.annotation.Transactional
     @PostMapping("/organizations/{organizationID}/nist_control/get/{controlID}/evidence")
-    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID, @RequestPart("file") MultipartFile file) throws Auth0Exception, IOException {
+    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID, @RequestPart("file") MultipartFile file) throws Auth0Exception, IOException, NoSuchAlgorithmException {
         if (notInOrganization(authentication, organizationID)) {
             throw new AccessDeniedException("The user is not in the organization that they are trying to post evidence on behalf of.");
             // TODO: check for role
@@ -55,6 +64,10 @@ public class EvidenceController {
         evidence.setName(file.getOriginalFilename());
         evidence.setType(file.getContentType());
         evidence.setBase64(Base64.encodeBase64String(file.getBytes()));
+        final var digest = MessageDigest.getInstance("SHA-256");
+        evidence.setChatid(evidence.getOrganizationID() + "-" + evidence.getContributorAuth0ID() + "-" +
+                evidence.getNistControlId() + "-" + Base64.encodeBase64String(digest.digest(file.getBytes())) + "-" +
+                RandomStringUtils.randomAlphanumeric(256, 512));
 
         evidence = evidenceRepository.save(evidence);
         return evidence;
