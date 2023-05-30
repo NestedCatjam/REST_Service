@@ -52,7 +52,7 @@ public class EvidenceController {
         evidence.setOrganizationID(organizationID);
         evidence.setContributorAuth0ID(authentication.getName());
         evidence.setDescription(file.getResource().getDescription());
-        evidence.setName(file.getName());
+        evidence.setName(file.getOriginalFilename());
         evidence.setType(file.getContentType());
         evidence.setBase64(Base64.encodeBase64String(file.getBytes()));
 
