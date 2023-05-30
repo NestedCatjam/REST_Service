@@ -65,9 +65,9 @@ public class EvidenceController {
         evidence.setType(file.getContentType());
         evidence.setBase64(Base64.encodeBase64String(file.getBytes()));
         final var digest = MessageDigest.getInstance("SHA-256");
-        evidence.setChatid(evidence.getOrganizationID() + "-" + evidence.getContributorAuth0ID() + "-" +
+        evidence.setChatid(Base64.encodeBase64String(digest.digest((evidence.getOrganizationID() + "-" + evidence.getContributorAuth0ID() + "-" +
                 evidence.getNistControlId() + "-" + Base64.encodeBase64String(digest.digest(file.getBytes())) + "-" +
-                RandomStringUtils.randomAlphanumeric(256, 512));
+                RandomStringUtils.randomAlphanumeric(256, 512)).getBytes())));
 
         evidence = evidenceRepository.save(evidence);
         return evidence;
