@@ -50,7 +50,9 @@ public class EvidenceController {
 
     @org.springframework.transaction.annotation.Transactional
     @PostMapping("/organizations/{organizationID}/nist_control/get/{controlID}/evidence")
-    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID, @PathVariable("controlID") long controlID, @RequestPart("file") MultipartFile file) throws Auth0Exception, IOException, NoSuchAlgorithmException {
+    public Evidence saveEvidence(Authentication authentication, @PathVariable("organizationID") String organizationID,
+                                 @PathVariable("controlID") long controlID, @RequestPart("file") MultipartFile file)
+            throws Auth0Exception, IOException, NoSuchAlgorithmException {
         if (notInOrganization(authentication, organizationID)) {
             throw new AccessDeniedException("The user is not in the organization that they are trying to post evidence on behalf of.");
             // TODO: check for role
