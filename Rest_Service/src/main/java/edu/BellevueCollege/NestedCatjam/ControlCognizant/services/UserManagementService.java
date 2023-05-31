@@ -56,7 +56,7 @@ public class UserManagementService {
 
     private TokenHolder token;
 
-    private static final int MAX_ATTEMPTS = 10;
+    private static final int MAX_ATTEMPTS = 15;
 
     @Autowired
     public UserManagementService() {
@@ -208,12 +208,22 @@ public class UserManagementService {
     }
 
     @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
+    private void makeAdmin(String userID, String in)throws Auth0Exception {
+        api.organizations().addRoles(in, userID, new Roles(List.of(UserRole.ADMINISTRATOR))).execute();
+    }
+
+    @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
+    private void add(String userID, String to) throws Auth0Exception {
+        api.organizations().addMembers(to, new Members(List.of(userID))).execute();
+    }
+
+    @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
     public Organization createOrganization(Organization organization, Authentication authentication) throws Auth0Exception {
         final var api = getApi();
         final var result = api.organizations().create(organization).execute();
 
-        api.organizations().addMembers(result.getId(), new Members(List.of(authentication.getName()))).execute();
-        api.organizations().addRoles(result.getId(), authentication.getName(), new Roles(List.of(UserRole.ADMINISTRATOR))).execute();
+        add(authentication.getName(), result.getId());
+        makeAdmin(authentication.getName(), result.getId());
         //add user as admin
         return result;
     }
@@ -270,6 +280,11 @@ public class UserManagementService {
 
 
     @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
+    private RolesPage roles(String of, String in) throws Auth0Exception {
+        return api.organizations().getRoles(in, of, new PageFilter()).execute();
+    }
+
+    @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
     public RolesPage getRoles(Authentication authentication, String organizationID, String userID) throws Auth0Exception {
         final var api = getApi();
 
@@ -277,7 +292,7 @@ public class UserManagementService {
             throw new AccessDeniedException("The user is not a member of this organization.");
         }
 
-        return api.organizations().getRoles(organizationID, userID, new PageFilter()).execute();
+        return roles(authentication.getName(), organizationID);
     }
 
     @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = 1000, multiplier = 2))
