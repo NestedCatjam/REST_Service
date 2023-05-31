@@ -6,11 +6,14 @@ import com.auth0.client.mgmt.filter.PageFilter;
 import com.auth0.client.mgmt.filter.RolesFilter;
 import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
+import com.auth0.json.auth.TokenHolder;
 import com.auth0.json.mgmt.Permission;
 import com.auth0.json.mgmt.Role;
 import com.auth0.json.mgmt.RolesPage;
 import com.auth0.json.mgmt.organizations.*;
 import com.auth0.json.mgmt.users.User;
+import com.auth0.net.TokenRequest;
+import edu.BellevueCollege.NestedCatjam.ControlCognizant.common.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
@@ -40,8 +43,15 @@ public class UserManagementService {
     public String clientSecret;
 
     @Value("${env.AUTH0_MANAGEMENT_AUDIENCE}")
+    //@Value("${env.AUTH0_AUDIENCE}")
     public String audience;
+
+    @Value("${env.TESTING_AUTH0_MANAGEMENT_API_TOKEN}")
+    private String testingAuth0ManagementAPIToken;
+
     private AuthAPI authAPI;
+
+    private TokenHolder token;
 
     @Autowired
     public UserManagementService() {
@@ -50,14 +60,42 @@ public class UserManagementService {
 
     // TODO: fix this
     private ManagementAPI getApi() throws Auth0Exception {
+       // try {Thread.sleep(1000); } catch (Exception e) {throw new RuntimeException(e);} // TODO: remove in production version
+        if (!testingAuth0ManagementAPIToken.isBlank()) {
+            if (null == this.api) {
+                System.out.println("Creating testing ManagementAPI");
+                this.api = new ManagementAPI(domain, testingAuth0ManagementAPIToken);
+                System.out.println("Testing ManagementAPI created");
+            }
+            return this.api;
+        }
+
         if (null == authAPI) {
             authAPI = new AuthAPI(domain, clientID, clientSecret);
         }
-        final var request = authAPI.requestToken(audience);
-        final var token = request.execute();
-        System.out.println(token);
+
+        if (null == token) {
+            System.out.println("Requesting access token");
+            final var request = authAPI.requestToken(audience);
+            //request.setScope("openid profile email address phone offline_access");
+            //request.setScope("openid");
+            token = request.execute();
+            System.out.println(token);
+        }
+
+
+        if (token.getRefreshToken() != null) {
+            System.out.println("Refreshing access token");
+            final var refreshToken = token.getRefreshToken();
+            final var tokenRequest = authAPI.renewAuth(refreshToken);
+            //tokenRequest.setScope("openid profile email address phone offline_access");
+
+            token = tokenRequest.execute();
+        }
+
 
         if (null == this.api) {
+            System.out.println("Creating ManagementAPI");
             this.api = new ManagementAPI(domain, token.getAccessToken());
         } else {
             this.api.setApiToken(token.getAccessToken());
@@ -157,7 +195,9 @@ public class UserManagementService {
     public Organization createOrganization(Organization organization, Authentication authentication) throws Auth0Exception {
         final var api = getApi();
         final var result = api.organizations().create(organization).execute();
-        getApi().organizations().addMembers(result.getId(), new Members(List.of(authentication.getName()))).execute();
+
+        api.organizations().addMembers(result.getId(), new Members(List.of(authentication.getName()))).execute();
+        api.organizations().addRoles(result.getId(), authentication.getName(), new Roles(List.of(UserRole.ADMINISTRATOR))).execute();
         //add user as admin
         return result;
     }
