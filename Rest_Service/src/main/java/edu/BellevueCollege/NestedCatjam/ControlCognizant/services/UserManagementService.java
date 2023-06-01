@@ -164,8 +164,8 @@ public class UserManagementService {
     }
 
     @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER))
-    public void addMember(String organizationID, String userID) throws Auth0Exception {
-        getApi().organizations().addMembers(organizationID, new Members(List.of(userID))).execute();
+    public void addMember(String organizationID, List<String> userIDs) throws Auth0Exception {
+        getApi().organizations().addMembers(organizationID, new Members(userIDs)).execute();
     }
     @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER))
     public void assignRole(Authentication authentication, String userID, Roles roles) throws Auth0Exception {

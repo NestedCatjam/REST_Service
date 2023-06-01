@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class OrganizationController {
@@ -41,8 +42,11 @@ public class OrganizationController {
     }
 
     @PostMapping("/organizations/{organizationID}/members/")
-    public void addMember(@PathVariable("organizationID") String organizationID, @RequestBody String userID) throws Auth0Exception {
-        userManagementService.addMember(organizationID, userID);
+    public void addMember(@PathVariable("organizationID") String organizationID, @RequestBody Map<String, List<String>> userIDsObject) throws Auth0Exception {
+        System.out.println("Add " + userIDsObject.toString() + " to " + organizationID);
+        for (final var userIDs : userIDsObject.values()) {
+            userManagementService.addMember(organizationID, userIDs);
+        }
     }
     @PostMapping("/organizations/{organizationID}/invitations/")
     public Invitation invite(Authentication authentication, @PathVariable("organizationID")
