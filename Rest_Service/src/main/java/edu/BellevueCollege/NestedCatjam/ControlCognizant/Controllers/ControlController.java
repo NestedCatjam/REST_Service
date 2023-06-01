@@ -155,6 +155,16 @@ public class ControlController {
     }
 
     @Transactional
+    @GetMapping("/api/v1/nist_control/get_all_nist_controls")
+    public ResponseEntity<Object> getAllNistControlsUndetailed() {
+        final var list =
+                nistRepository.findAll().stream()
+                        .map(nistControl -> Map.of("id", nistControl.getId()))
+                        .toList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @Transactional
     @GetMapping("/api/v1/hitrust_control/get_all_controls")
     public ResponseEntity<Object> getAllHitrustControls() {
         try {
@@ -203,6 +213,17 @@ public class ControlController {
                         .filter(nistControl -> nistControl.getControlCategory().equals(control_category))
                         .map(nistControl -> Map.of("id", nistControl.getId(), "controlName", nistControl.getControlName(), "controlDescription", nistControl.getControlDescription(), "satisfied", nistControl.isSatisfied()))
                         .toList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @Transactional
+    @GetMapping("/api/v1/nist_control/get_all_satisfied_nist_controls")
+    public ResponseEntity<Object> getAllSatisfiedNistControlsTwo(){
+        final var list =
+                nistRepository.findAll().stream()
+                        .filter(nistControl -> nistControl.isSatisfied())
+                        .map(nistControl -> Map.of("id", nistControl.getId()))
+                                .toList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
