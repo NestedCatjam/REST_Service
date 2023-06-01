@@ -72,7 +72,7 @@ public class ControlController {
     public ResponseEntity<Object> getHitrustControlsByNistMapping(@PathVariable String nistName) {
         try {
             NistControl nist = nistRepository.findByControlName(nistName);
-            Set<HitrustControl> mappings = nist.getHitrustControls();
+            final var mappings = nist.getHitrustControls();
             return new ResponseEntity<>(mappings, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,7 +201,7 @@ public class ControlController {
         final var list =
                 nistRepository.findAll().stream()
                         .filter(nistControl -> nistControl.getControlCategory().equals(control_category))
-                        .map(nistControl -> Map.of("id", nistControl.getId(), "controlName", nistControl.getControlName(), "controlDescription", nistControl.getControlDescription()))
+                        .map(nistControl -> Map.of("id", nistControl.getId(), "controlName", nistControl.getControlName(), "controlDescription", nistControl.getControlDescription(), "satisfied", nistControl.isSatisfied()))
                         .toList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -359,7 +359,7 @@ public class ControlController {
 
             // Update the mappings
             List<String> hitrustMappings = (List<String>) payload.get("hitrustMappings");
-            Set<HitrustControl> hitrustControls = new HashSet<>();
+            final var hitrustControls = new ArrayList<HitrustControl>();
             for (String mapping : hitrustMappings) {
                 HitrustControl hitrustControl = hitrustRepository.findByControlName(mapping);
                 if (hitrustControl != null) {

@@ -6,7 +6,9 @@ import lombok.NonNull;
 import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,7 +46,7 @@ public class NistControl {
             inverseJoinColumns = @JoinColumn(name = "hitrust_control_id")
     )
 
-    private Set<HitrustControl> hitrustControls = new HashSet<>();
+    private List<HitrustControl> hitrustControls = new ArrayList<>();
 
     @Column(name = "is_satisfied")
     private boolean satisfied;
@@ -57,7 +59,7 @@ public class NistControl {
         this.satisfied = false;
     }
 
-    public NistControl(String controlFunction, String controlCategory, String controlName, String controlDescription, Set<HitrustControl> hitrustMappings) {
+    public NistControl(String controlFunction, String controlCategory, String controlName, String controlDescription, List<HitrustControl> hitrustMappings) {
         this.controlFunction = controlFunction;
         this.controlCategory = controlCategory;
         this.controlName = controlName;
