@@ -295,7 +295,7 @@ public class UserManagementService {
             throw new AccessDeniedException("The user is not a member of this organization.");
         }
 
-        return roles(authentication.getName(), organizationID);
+        return roles(userID, organizationID);
     }
 
     @Retryable(maxAttempts = MAX_ATTEMPTS, value = RateLimitException.class, backoff = @Backoff(delay = DELAY, multiplier = MULTIPLIER))
